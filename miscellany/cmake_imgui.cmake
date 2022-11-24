@@ -25,8 +25,8 @@ set(IMGUI_SOURCES
         )
 
 # Add 'imgui' static archive.
-# add_library(${IMGUI_NAME} STATIC ${IMGUI_SOURCES})
-# target_include_directories(${IMGUI_NAME} PUBLIC
-#         ${PROJECT_SOURCE_DIR}/libs/imgui)
-# target_compile_definitions(${IMGUI_NAME} PUBLIC
-#         IMGUI_DISABLE_OBSOLETE_FUNCTIONS)
+add_library(${IMGUI_NAME} STATIC ${IMGUI_SOURCES})
+target_include_directories(${IMGUI_NAME} PUBLIC
+        ${PROJECT_SOURCE_DIR}/libs/imgui)
+target_compile_definitions(${IMGUI_NAME} PUBLIC
+        IMGUI_DISABLE_OBSOLETE_FUNCTIONS)

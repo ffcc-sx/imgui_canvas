@@ -12,9 +12,9 @@ add_subdirectory(libs/glfw)
 # Build 'imgui' module of static.
 include(miscellany/cmake_imgui.cmake)
 
+file(GLOB_RECURSE PROJECT_SOURCES LIST_DIRECTORIES false src/*.cpp)
 add_executable(${PROJECT_NAME}
-        main.cpp
-        ${IMGUI_SOURCES}
+        ${PROJECT_SOURCES}
         ${PROJECT_SOURCE_DIR}/libs/imgui/backends/imgui_impl_glfw.cpp
         ${PROJECT_SOURCE_DIR}/libs/imgui/backends/imgui_impl_opengl3.cpp
         )
@@ -26,6 +26,7 @@ target_include_directories(${PROJECT_NAME} PRIVATE
 
 target_link_libraries(${PROJECT_NAME}
         glfw
+        imgui
         )
 add_custom_command(
         TARGET ${PROJECT_NAME}
