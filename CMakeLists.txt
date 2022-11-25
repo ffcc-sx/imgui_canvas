@@ -22,6 +22,7 @@ target_include_directories(${PROJECT_NAME} PRIVATE
         ${PROJECT_SOURCE_DIR}/libs/imgui
         ${PROJECT_SOURCE_DIR}/libs/imgui/backends
         ${PROJECT_SOURCE_DIR}/libs/glfw/include
+        ${PROJECT_SOURCE_DIR}/libs/format
         )
 
 target_link_libraries(${PROJECT_NAME}

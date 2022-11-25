@@ -27,5 +27,11 @@ static void glfw_error_callback(int error, const char* description)
 }
 
 int main(int, char**) {
-    Application::exec();
+    auto render = [](){
+        auto &io = ImGui::GetIO();
+        ImGui::Text("FPS: %.2f (%.2gms)", io.Framerate, io.Framerate ? 1000.0f / io.Framerate : 0.0f);
+        ImGui::Separator();
+    };
+
+    Application::exec(render);
 }

@@ -19,33 +19,21 @@
 #include "backends/imgui_impl_glfw.h"
 #include "backends/imgui_impl_opengl3.h"
 #include "ImGuiEx/imgui_node_editor.h"
+#include "Format.h"
 
 #include <iostream>
 
 using namespace std;
 
-
-ImGuiWindowFlags GetWindowFlags()
-{
-    return
-            ImGuiWindowFlags_NoTitleBar |
-            ImGuiWindowFlags_NoResize |
-            ImGuiWindowFlags_NoMove |
-            ImGuiWindowFlags_NoScrollbar |
-            ImGuiWindowFlags_NoScrollWithMouse |
-            ImGuiWindowFlags_NoSavedSettings |
-            ImGuiWindowFlags_NoBringToFrontOnFocus;
-}
-
 //==================== Initialize static members.   ====================//
-Application         *Application::_instance {nullptr};
-Application::State   Application::_state    {Application::State::Idle};
-GLFWwindow*          Application::_window   {nullptr};
+Application         *Application::_instance     {nullptr};
+GLFWwindow          *Application::_window       {nullptr};
+ImVec4              *Application::_color_clear  {nullptr};
+Application::State   Application::_state        {Application::State::Idle};
 
-int Application::exec() {
+int Application::exec(const std::function<void()> &embed) {
     // Exit code for exec().
     int code_exit = 0;
-    if(!_instance) _instance = new Application;
     // Check state.
     if(_state == State::Running) {
         cout << "Application already running." << endl;
@@ -74,20 +62,19 @@ int Application::exec() {
     const char* glsl_version = "#version 130";
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
-    //glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);  // 3.2+ only
-    //glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);            // 3.0+ only
+    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);  // 3.2+ only
+    glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);            // 3.0+ only
 #endif
     //--------------------------------------------------------------------------------//
 
-    //==================== Setup window ====================//
-
     glfwSetErrorCallback([](int error, const char* description){
-        // fprintf(stderr, "Glfw Error %d: %s\n", error, description);
+        cout << util::Format("Glfw Error {0}: {1}", error, description) << endl;
     });
     if (!glfwInit()) return -1;
 
     // Create window with graphics context
-    _window = glfwCreateWindow(1280, 720, "Dear ImGui GLFW+OpenGL3 example", NULL, NULL);
+    const char *title = "Dear ImGui GLFW+OpenGL3 example";
+    _window = glfwCreateWindow(1280, 720, title, nullptr, nullptr);
     if (_window == nullptr) return -1;
     glfwMakeContextCurrent(_window);
     glfwSwapInterval(1); // Enable vsync
@@ -95,7 +82,7 @@ int Application::exec() {
     // Setup Dear ImGui context
     IMGUI_CHECKVERSION();
     ImGui::CreateContext();
-    ImGuiIO& io = ImGui::GetIO(); (void)io;
+    auto &io = ImGui::GetIO(); (void)io;
     //io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;     // Enable Keyboard Controls
     //io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;      // Enable Gamepad Controls
 
@@ -124,63 +111,26 @@ int Application::exec() {
     //ImFont* font = io.Fonts->AddFontFromFileTTF("c:\\Windows\\Fonts\\ArialUni.ttf", 18.0f, NULL, io.Fonts->GetGlyphRangesJapanese());
     //IM_ASSERT(font != NULL);
 
-    // Our state
-    ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
-
+    // TODO: The ImGuiEx using config to save layout, try make it optional.
     ax::NodeEditor::Config config;
     config.SettingsFile = "Simple.json";
     auto m_Context = ax::NodeEditor::CreateEditor(&config);
 
     // Main loop
     while (!glfwWindowShouldClose(_window)) {
-        // Poll and handle events (inputs, window resize, etc.)
-        // You can read the io.WantCaptureMouse, io.WantCaptureKeyboard flags to tell if dear imgui wants to use your inputs.
-        // - When io.WantCaptureMouse is true, do not dispatch mouse input data to your main application, or clear/overwrite your copy of the mouse data.
-        // - When io.WantCaptureKeyboard is true, do not dispatch keyboard input data to your main application, or clear/overwrite your copy of the keyboard data.
-        // Generally you may always pass all inputs to dear imgui, and hide them from your application based on those two flags.
         glfwPollEvents();
-
         // Start the Dear ImGui frame
         ImGui_ImplOpenGL3_NewFrame();
         ImGui_ImplGlfw_NewFrame();
         ImGui::NewFrame();
-
-        ImGui::SetNextWindowPos(ImVec2(0, 0));
-        ImGui::SetNextWindowSize(io.DisplaySize);
-        const auto windowBorderSize = ImGui::GetStyle().WindowBorderSize;
-        ImGui::Begin("Content", nullptr, GetWindowFlags());
-        ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, windowBorderSize);
-
-        _onRender();
-        auto& io = ImGui::GetIO();
-        ImGui::Text("FPS: %.2f (%.2gms)", io.Framerate, io.Framerate ? 1000.0f / io.Framerate : 0.0f);
-        ImGui::Separator();
-        ax::NodeEditor::SetCurrentEditor(m_Context);
-        ax::NodeEditor::Begin("My Editor", ImVec2(0.0, 0.0f));
-        int uniqueId = 1;
-        // Start drawing nodes.
-        ax::NodeEditor::BeginNode(uniqueId++);
-        ImGui::Text("Node A");
-        ax::NodeEditor::BeginPin(uniqueId++, ax::NodeEditor::PinKind::Input);
-        ImGui::Text("-> In");
-        ax::NodeEditor::EndPin();
-        ImGui::SameLine();
-        ax::NodeEditor::BeginPin(uniqueId++, ax::NodeEditor::PinKind::Output);
-        ImGui::Text("Out ->");
-        ax::NodeEditor::EndPin();
-        ax::NodeEditor::EndNode();
-        ax::NodeEditor::End();
-        ax::NodeEditor::SetCurrentEditor(nullptr);
-
-        ImGui::PopStyleVar();
-        ImGui::End();
-
+        // Invoke content render.
+        _onRender(embed);
         // Rendering
         ImGui::Render();
         int display_w, display_h;
         glfwGetFramebufferSize(_window, &display_w, &display_h);
         glViewport(0, 0, display_w, display_h);
-        glClearColor(clear_color.x * clear_color.w, clear_color.y * clear_color.w, clear_color.z * clear_color.w, clear_color.w);
+        glClearColor(color_clear()->x * color_clear()->w, color_clear()->y * color_clear()->w, color_clear()->z * color_clear()->w, color_clear()->w);
         glClear(GL_COLOR_BUFFER_BIT);
         ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 
@@ -199,6 +149,55 @@ int Application::exec() {
     return code_exit;
 }
 
-void Application::_onRender() {
-
+ImVec4 *Application::color_clear() {
+    if(!_color_clear) _color_clear = new ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
+    return _color_clear;
 }
+
+Application *Application::instance() {
+    if(!_instance) _instance = new Application;
+    return _instance;
+}
+
+constexpr int Application::_window_style() {
+    return  ImGuiWindowFlags_NoTitleBar |
+            ImGuiWindowFlags_NoResize |
+            ImGuiWindowFlags_NoMove |
+            ImGuiWindowFlags_NoScrollbar |
+            ImGuiWindowFlags_NoScrollWithMouse |
+            ImGuiWindowFlags_NoSavedSettings |
+            ImGuiWindowFlags_NoBringToFrontOnFocus;
+}
+
+void Application::_onRender(const std::function<void()> &embed) {
+    // Render fixed full window panel of background.
+    ImGui::SetNextWindowPos(ImVec2(0, 0));
+    ImGui::SetNextWindowSize(ImGui::GetIO().DisplaySize);
+    const auto windowBorderSize = ImGui::GetStyle().WindowBorderSize;
+    ImGui::Begin("window_background", nullptr, _window_style());
+    ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, windowBorderSize);
+    // Invoke embed render function.
+    embed();
+    // Finished render fixed full window panel of background.
+    ImGui::PopStyleVar();
+    ImGui::End();
+}
+
+// ImGui::Text("FPS: %.2f (%.2gms)", io.Framerate, io.Framerate ? 1000.0f / io.Framerate : 0.0f);
+// ImGui::Separator();
+// ax::NodeEditor::SetCurrentEditor(m_Context);
+// ax::NodeEditor::Begin("My Editor", ImVec2(0.0, 0.0f));
+// int uniqueId = 1;
+// // Start drawing nodes.
+// ax::NodeEditor::BeginNode(uniqueId++);
+// ImGui::Text("Node A");
+// ax::NodeEditor::BeginPin(uniqueId++, ax::NodeEditor::PinKind::Input);
+// ImGui::Text("-> In");
+// ax::NodeEditor::EndPin();
+// ImGui::SameLine();
+// ax::NodeEditor::BeginPin(uniqueId++, ax::NodeEditor::PinKind::Output);
+// ImGui::Text("Out ->");
+// ax::NodeEditor::EndPin();
+// ax::NodeEditor::EndNode();
+// ax::NodeEditor::End();
+// ax::NodeEditor::SetCurrentEditor(nullptr);
