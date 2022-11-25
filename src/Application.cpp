@@ -78,6 +78,11 @@ int Application::exec(const std::function<void()> &embed) {
     if (_window == nullptr) return -1;
     glfwMakeContextCurrent(_window);
     glfwSwapInterval(1); // Enable vsync
+    // Refresh when window is damaged.
+    glfwSetWindowRefreshCallback(_window, [](GLFWwindow* window){
+        //draw_editor_ui(window);
+        glfwSwapBuffers(window);
+    });
 
     // Setup Dear ImGui context
     IMGUI_CHECKVERSION();
