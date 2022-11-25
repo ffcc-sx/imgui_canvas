@@ -27,6 +27,9 @@ target_include_directories(${PROJECT_NAME} PRIVATE
 target_link_libraries(${PROJECT_NAME}
         glfw
         imgui
+        $<$<STREQUAL:$<PLATFORM_ID>,Windows>:gdi32>
+        $<$<STREQUAL:$<PLATFORM_ID>,Windows>:opengl32>
+        $<$<STREQUAL:$<PLATFORM_ID>,Windows>:imm32>
         )
 add_custom_command(
         TARGET ${PROJECT_NAME}

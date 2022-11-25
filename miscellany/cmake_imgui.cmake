@@ -28,5 +28,7 @@ set(IMGUI_SOURCES
 add_library(${IMGUI_NAME} STATIC ${IMGUI_SOURCES})
 target_include_directories(${IMGUI_NAME} PUBLIC
         ${PROJECT_SOURCE_DIR}/libs/imgui)
+
 target_compile_definitions(${IMGUI_NAME} PUBLIC
-        IMGUI_DISABLE_OBSOLETE_FUNCTIONS)
+        IMGUI_DISABLE_OBSOLETE_FUNCTIONS
+        )
