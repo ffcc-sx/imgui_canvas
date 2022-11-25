@@ -24,6 +24,19 @@
 
 using namespace std;
 
+
+ImGuiWindowFlags GetWindowFlags()
+{
+    return
+            ImGuiWindowFlags_NoTitleBar |
+            ImGuiWindowFlags_NoResize |
+            ImGuiWindowFlags_NoMove |
+            ImGuiWindowFlags_NoScrollbar |
+            ImGuiWindowFlags_NoScrollWithMouse |
+            ImGuiWindowFlags_NoSavedSettings |
+            ImGuiWindowFlags_NoBringToFrontOnFocus;
+}
+
 //==================== Initialize static members.   ====================//
 Application         *Application::_instance {nullptr};
 Application::State   Application::_state    {Application::State::Idle};
@@ -132,6 +145,12 @@ int Application::exec() {
         ImGui_ImplGlfw_NewFrame();
         ImGui::NewFrame();
 
+        ImGui::SetNextWindowPos(ImVec2(0, 0));
+        ImGui::SetNextWindowSize(io.DisplaySize);
+        const auto windowBorderSize = ImGui::GetStyle().WindowBorderSize;
+        ImGui::Begin("Content", nullptr, GetWindowFlags());
+        ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, windowBorderSize);
+
         _onRender();
         auto& io = ImGui::GetIO();
         ImGui::Text("FPS: %.2f (%.2gms)", io.Framerate, io.Framerate ? 1000.0f / io.Framerate : 0.0f);
@@ -152,6 +171,9 @@ int Application::exec() {
         ax::NodeEditor::EndNode();
         ax::NodeEditor::End();
         ax::NodeEditor::SetCurrentEditor(nullptr);
+
+        ImGui::PopStyleVar();
+        ImGui::End();
 
         // Rendering
         ImGui::Render();
