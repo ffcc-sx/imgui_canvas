@@ -26,8 +26,8 @@
     };
 
 
-namespace ax {
-    namespace NodeEditor {
+namespace ImGuiEx {
+    namespace internal {
         namespace Detail {
 
 # define DECLARE_KEY_TESTER(Key)                                                                    \
@@ -65,7 +65,7 @@ namespace ax {
 
 
 //------------------------------------------------------------------------------
-namespace ed = ax::NodeEditor::Detail;
+namespace ed = ImGuiEx::internal::Detail;
 
 static const int c_BackgroundChannelCount = 1;
 static const int c_LinkChannelCount = 4;
@@ -431,7 +431,7 @@ static void ImDrawList_AddBezierWithArrows(ImDrawList *drawList, const ImCubicBe
                                            float endArrowWidth,
                                            bool fill, ImU32 color, float strokeThickness,
                                            const ImVec2 *startDirHint = nullptr, const ImVec2 *endDirHint = nullptr) {
-    using namespace ax;
+    using namespace ImGuiEx;
 
     if ((color >> 24) == 0)
         return;
@@ -931,7 +931,7 @@ ImRect ed::Link::GetBounds() const {
 //------------------------------------------------------------------------------
 // Editor Context
 //------------------------------------------------------------------------------
-ed::EditorContext::EditorContext(const ax::NodeEditor::Config *config)
+ed::EditorContext::EditorContext(const ImGuiEx::internal::Config *config)
         : m_Config(config), m_EditorActiveId(0), m_IsFirstFrame(true), m_IsFocused(false), m_IsHovered(false),
           m_IsHoveredWithoutOverlapp(false), m_ShortcutsEnabled(true), m_Style(), m_Nodes(), m_Pins(), m_Links(),
           m_SelectionId(1), m_LastActiveLink(nullptr), m_Canvas(), m_IsCanvasVisible(false), m_NodeBuilder(this),
@@ -1034,13 +1034,13 @@ void ed::EditorContext::Begin(const char *id, const ImVec2 &size) {
         auto width = previousVisibleRect.GetHeight();
         auto height = previousVisibleRect.GetHeight();
 
-        if (m_Config.CanvasSizeMode == ax::NodeEditor::CanvasSizeMode::FitVerticalView) {
+        if (m_Config.CanvasSizeMode == ImGuiEx::internal::CanvasSizeMode::FitVerticalView) {
             height = previousVisibleRect.GetHeight();
             width = height * currentAspectRatio;
-        } else if (m_Config.CanvasSizeMode == ax::NodeEditor::CanvasSizeMode::FitHorizontalView) {
+        } else if (m_Config.CanvasSizeMode == ImGuiEx::internal::CanvasSizeMode::FitHorizontalView) {
             width = previousVisibleRect.GetWidth();
             height = width / currentAspectRatio;
-        } else if (m_Config.CanvasSizeMode == ax::NodeEditor::CanvasSizeMode::CenterOnly) {
+        } else if (m_Config.CanvasSizeMode == ImGuiEx::internal::CanvasSizeMode::CenterOnly) {
             width = currentVisibleRect.GetWidth();
             height = currentVisibleRect.GetHeight();
         }
@@ -1451,7 +1451,7 @@ void ed::EditorContext::SetNodePosition(NodeId nodeId, const ImVec2 &position) {
     if (node->m_Bounds.Min != position) {
         node->m_Bounds.Translate(position - node->m_Bounds.Min);
         node->m_Bounds.Floor();
-        MakeDirty(NodeEditor::SaveReasonFlags::Position, node);
+        MakeDirty(internal::SaveReasonFlags::Position, node);
     }
 }
 
@@ -1468,7 +1468,7 @@ void ed::EditorContext::SetGroupSize(NodeId nodeId, const ImVec2 &size) {
         node->m_GroupBounds.Min = node->m_Bounds.Min;
         node->m_GroupBounds.Max = node->m_Bounds.Min + size;
         node->m_GroupBounds.Floor();
-        MakeDirty(NodeEditor::SaveReasonFlags::Size, node);
+        MakeDirty(internal::SaveReasonFlags::Size, node);
     }
 }
 
@@ -2473,13 +2473,13 @@ std::string ed::Settings::Serialize() {
         auto value = std::to_string(reinterpret_cast<uintptr_t>(id.AsPointer()));
         switch (id.Type()) {
             default:
-            case NodeEditor::Detail::ObjectType::None:
+            case internal::Detail::ObjectType::None:
                 return value;
-            case NodeEditor::Detail::ObjectType::Node:
+            case internal::Detail::ObjectType::Node:
                 return "node:" + value;
-            case NodeEditor::Detail::ObjectType::Link:
+            case internal::Detail::ObjectType::Link:
                 return "link:" + value;
-            case NodeEditor::Detail::ObjectType::Pin:
+            case internal::Detail::ObjectType::Pin:
                 return "pin:" + value;
         }
     };
@@ -5117,9 +5117,9 @@ ImVec4 *ed::Style::GetVarVec4Addr(StyleVar idx) {
 //------------------------------------------------------------------------------
 // Config
 //------------------------------------------------------------------------------
-ed::Config::Config(const ax::NodeEditor::Config *config) {
+ed::Config::Config(const ImGuiEx::internal::Config *config) {
     if (config)
-        *static_cast<ax::NodeEditor::Config *>(this) = *config;
+        *static_cast<ImGuiEx::internal::Config *>(this) = *config;
 }
 
 std::string ed::Config::Load() {

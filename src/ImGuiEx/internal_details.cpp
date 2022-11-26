@@ -3,3 +3,9 @@
 //
 
 #include "internal_details.h"
+
+namespace ImGuiEx {
+    namespace internal {
+
+    }
+}

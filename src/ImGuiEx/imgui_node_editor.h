@@ -11,8 +11,8 @@
 # define IMGUI_NODE_EDITOR_VERSION      "0.9.2"
 # define IMGUI_NODE_EDITOR_VERSION_NUM  000902
 //------------------------------------------------------------------------------
-namespace ax {
-    namespace NodeEditor {
+namespace ImGuiEx {
+    namespace internal {
         struct NodeId;
         struct LinkId;
         struct PinId;
@@ -28,6 +28,7 @@ namespace ax {
             FitHorizontalView,      // Previous view will be scaled to fit new view on X axis
             CenterOnly,             // Previous view will be centered on new view
         };
+
         enum class SaveReasonFlags : uint32_t {
             None = 0x00000000,
             Navigation = 0x00000001,
@@ -38,11 +39,9 @@ namespace ax {
             RemoveNode = 0x00000020,
             User = 0x00000040
         };
-
         inline SaveReasonFlags operator|(SaveReasonFlags lhs, SaveReasonFlags rhs) {
             return static_cast<SaveReasonFlags>(static_cast<uint32_t>(lhs) | static_cast<uint32_t>(rhs));
         }
-
         inline SaveReasonFlags operator&(SaveReasonFlags lhs, SaveReasonFlags rhs) {
             return static_cast<SaveReasonFlags>(static_cast<uint32_t>(lhs) & static_cast<uint32_t>(rhs));
         }
@@ -55,7 +54,7 @@ namespace ax {
         using ConfigSession = void (*)(void *userPointer);
 
         struct Config {
-            using CanvasSizeModeAlias = ax::NodeEditor::CanvasSizeMode;
+            using CanvasSizeModeAlias = ImGuiEx::internal::CanvasSizeMode;
 
             const char *SettingsFile;
             ConfigSession BeginSaveSession;
@@ -447,15 +446,15 @@ namespace ax {
         int GetOrderedNodeIds(NodeId *nodes,
                               int size);    // Fills an array with node id's in order they're drawn; up to 'size` elements are set. Returns actual size of filled id's.
 
-        struct NodeId final : imgui_details::SafePointerType<NodeId> {
+        struct NodeId final : internal::SafePointerType<NodeId> {
             using SafePointerType::SafePointerType;
         };
 
-        struct LinkId final : imgui_details::SafePointerType<LinkId> {
+        struct LinkId final : internal::SafePointerType<LinkId> {
             using SafePointerType::SafePointerType;
         };
 
-        struct PinId final : imgui_details::SafePointerType<PinId> {
+        struct PinId final : internal::SafePointerType<PinId> {
             using SafePointerType::SafePointerType;
         };
     } // end namespace Editor

@@ -23,11 +23,11 @@
 
 
 //------------------------------------------------------------------------------
-namespace ax {
-    namespace NodeEditor {
+namespace ImGuiEx {
+    namespace internal {
         namespace Detail {
 //------------------------------------------------------------------------------
-            namespace ed = ax::NodeEditor::Detail;
+            namespace ed = ImGuiEx::internal::Detail;
             namespace json = crude_json;
 //------------------------------------------------------------------------------
             using std::vector;
@@ -85,17 +85,17 @@ namespace ax {
                 Pin
             };
 
-            using ax::NodeEditor::PinKind;
-            using ax::NodeEditor::StyleColor;
-            using ax::NodeEditor::StyleVar;
-            using ax::NodeEditor::SaveReasonFlags;
+            using ImGuiEx::internal::PinKind;
+            using ImGuiEx::internal::StyleColor;
+            using ImGuiEx::internal::StyleVar;
+            using ImGuiEx::internal::SaveReasonFlags;
 
-            using ax::NodeEditor::NodeId;
-            using ax::NodeEditor::PinId;
-            using ax::NodeEditor::LinkId;
+            using ImGuiEx::internal::NodeId;
+            using ImGuiEx::internal::PinId;
+            using ImGuiEx::internal::LinkId;
 
-            struct ObjectId final : imgui_details::SafePointerType<ObjectId> {
-                using Super = imgui_details::SafePointerType<ObjectId>;
+            struct ObjectId final : internal::SafePointerType<ObjectId> {
+                using Super = internal::SafePointerType<ObjectId>;
                 using Super::Super;
 
                 ObjectId() : Super(Invalid), m_Type(ObjectType::None) {}
@@ -1212,7 +1212,7 @@ namespace ax {
                 ImDrawList *GetBackgroundDrawList();
             };
 
-            struct Style : ax::NodeEditor::Style {
+            struct Style : ImGuiEx::internal::Style {
                 void PushColor(StyleColor colorIndex, const ImVec4 &color);
 
                 void PopColor(int count = 1);
@@ -1248,8 +1248,8 @@ namespace ax {
                 vector<VarModifier> m_VarStack;
             };
 
-            struct Config : ax::NodeEditor::Config {
-                Config(const ax::NodeEditor::Config *config);
+            struct Config : ImGuiEx::internal::Config {
+                Config(const ImGuiEx::internal::Config *config);
 
                 std::string Load();
 
@@ -1279,7 +1279,7 @@ namespace ax {
 
 
             struct EditorContext {
-                EditorContext(const ax::NodeEditor::Config *config = nullptr);
+                EditorContext(const ImGuiEx::internal::Config *config = nullptr);
 
                 ~EditorContext();
 
@@ -1599,8 +1599,8 @@ namespace ax {
 
 
 //------------------------------------------------------------------------------
-namespace ax {
-    namespace NodeEditor {
+namespace ImGuiEx {
+    namespace internal {
         namespace Detail {
 
 

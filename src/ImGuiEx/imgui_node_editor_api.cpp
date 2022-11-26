@@ -1,7 +1,7 @@
 # include "imgui_node_editor_internal.h"
 # include <algorithm>
 
-static ax::NodeEditor::Detail::EditorContext *s_Editor = nullptr;
+static ImGuiEx::internal::Detail::EditorContext *s_Editor = nullptr;
 
 template<typename C, typename I, typename F>
 static int BuildIdList(C &container, I *list, int listSize, F &&accept) {
@@ -22,18 +22,18 @@ static int BuildIdList(C &container, I *list, int listSize, F &&accept) {
 }
 
 //------------------------------------------------------------------------------
-ax::NodeEditor::EditorContext *ax::NodeEditor::CreateEditor(const Config *config) {
-    return reinterpret_cast<ax::NodeEditor::EditorContext *>(new ax::NodeEditor::Detail::EditorContext(config));
+ImGuiEx::internal::EditorContext *ImGuiEx::internal::CreateEditor(const Config *config) {
+    return reinterpret_cast<ImGuiEx::internal::EditorContext *>(new ImGuiEx::internal::Detail::EditorContext(config));
 }
 
-void ax::NodeEditor::DestroyEditor(EditorContext *ctx) {
+void ImGuiEx::internal::DestroyEditor(EditorContext *ctx) {
     auto lastContext = GetCurrentEditor();
 
     // Set context we're about to destroy as current, to give callback valid context
     if (lastContext != ctx)
         SetCurrentEditor(ctx);
 
-    auto editor = reinterpret_cast<ax::NodeEditor::Detail::EditorContext *>(ctx);
+    auto editor = reinterpret_cast<ImGuiEx::internal::Detail::EditorContext *>(ctx);
 
     delete editor;
 
@@ -41,12 +41,12 @@ void ax::NodeEditor::DestroyEditor(EditorContext *ctx) {
         SetCurrentEditor(lastContext);
 }
 
-const ax::NodeEditor::Config &ax::NodeEditor::GetConfig(EditorContext *ctx) {
+const ImGuiEx::internal::Config &ImGuiEx::internal::GetConfig(EditorContext *ctx) {
     if (ctx == nullptr)
         ctx = GetCurrentEditor();
 
     if (ctx) {
-        auto editor = reinterpret_cast<ax::NodeEditor::Detail::EditorContext *>(ctx);
+        auto editor = reinterpret_cast<ImGuiEx::internal::Detail::EditorContext *>(ctx);
 
         return editor->GetConfig();
     } else {
@@ -55,136 +55,136 @@ const ax::NodeEditor::Config &ax::NodeEditor::GetConfig(EditorContext *ctx) {
     }
 }
 
-void ax::NodeEditor::SetCurrentEditor(EditorContext *ctx) {
-    s_Editor = reinterpret_cast<ax::NodeEditor::Detail::EditorContext *>(ctx);
+void ImGuiEx::internal::SetCurrentEditor(EditorContext *ctx) {
+    s_Editor = reinterpret_cast<ImGuiEx::internal::Detail::EditorContext *>(ctx);
 }
 
-ax::NodeEditor::EditorContext *ax::NodeEditor::GetCurrentEditor() {
-    return reinterpret_cast<ax::NodeEditor::EditorContext *>(s_Editor);
+ImGuiEx::internal::EditorContext *ImGuiEx::internal::GetCurrentEditor() {
+    return reinterpret_cast<ImGuiEx::internal::EditorContext *>(s_Editor);
 }
 
-ax::NodeEditor::Style &ax::NodeEditor::GetStyle() {
+ImGuiEx::internal::Style &ImGuiEx::internal::GetStyle() {
     return s_Editor->GetStyle();
 }
 
-const char *ax::NodeEditor::GetStyleColorName(StyleColor colorIndex) {
+const char *ImGuiEx::internal::GetStyleColorName(StyleColor colorIndex) {
     return s_Editor->GetStyle().GetColorName(colorIndex);
 }
 
-void ax::NodeEditor::PushStyleColor(StyleColor colorIndex, const ImVec4 &color) {
+void ImGuiEx::internal::PushStyleColor(StyleColor colorIndex, const ImVec4 &color) {
     s_Editor->GetStyle().PushColor(colorIndex, color);
 }
 
-void ax::NodeEditor::PopStyleColor(int count) {
+void ImGuiEx::internal::PopStyleColor(int count) {
     s_Editor->GetStyle().PopColor(count);
 }
 
-void ax::NodeEditor::PushStyleVar(StyleVar varIndex, float value) {
+void ImGuiEx::internal::PushStyleVar(StyleVar varIndex, float value) {
     s_Editor->GetStyle().PushVar(varIndex, value);
 }
 
-void ax::NodeEditor::PushStyleVar(StyleVar varIndex, const ImVec2 &value) {
+void ImGuiEx::internal::PushStyleVar(StyleVar varIndex, const ImVec2 &value) {
     s_Editor->GetStyle().PushVar(varIndex, value);
 }
 
-void ax::NodeEditor::PushStyleVar(StyleVar varIndex, const ImVec4 &value) {
+void ImGuiEx::internal::PushStyleVar(StyleVar varIndex, const ImVec4 &value) {
     s_Editor->GetStyle().PushVar(varIndex, value);
 }
 
-void ax::NodeEditor::PopStyleVar(int count) {
+void ImGuiEx::internal::PopStyleVar(int count) {
     s_Editor->GetStyle().PopVar(count);
 }
 
-void ax::NodeEditor::Begin(const char *id, const ImVec2 &size) {
+void ImGuiEx::internal::Begin(const char *id, const ImVec2 &size) {
     s_Editor->Begin(id, size);
 }
 
-void ax::NodeEditor::End() {
+void ImGuiEx::internal::End() {
     s_Editor->End();
 }
 
-void ax::NodeEditor::BeginNode(NodeId id) {
+void ImGuiEx::internal::BeginNode(NodeId id) {
     s_Editor->GetNodeBuilder().Begin(id);
 }
 
-void ax::NodeEditor::BeginPin(PinId id, PinKind kind) {
+void ImGuiEx::internal::BeginPin(PinId id, PinKind kind) {
     s_Editor->GetNodeBuilder().BeginPin(id, kind);
 }
 
-void ax::NodeEditor::PinRect(const ImVec2 &a, const ImVec2 &b) {
+void ImGuiEx::internal::PinRect(const ImVec2 &a, const ImVec2 &b) {
     s_Editor->GetNodeBuilder().PinRect(a, b);
 }
 
-void ax::NodeEditor::PinPivotRect(const ImVec2 &a, const ImVec2 &b) {
+void ImGuiEx::internal::PinPivotRect(const ImVec2 &a, const ImVec2 &b) {
     s_Editor->GetNodeBuilder().PinPivotRect(a, b);
 }
 
-void ax::NodeEditor::PinPivotSize(const ImVec2 &size) {
+void ImGuiEx::internal::PinPivotSize(const ImVec2 &size) {
     s_Editor->GetNodeBuilder().PinPivotSize(size);
 }
 
-void ax::NodeEditor::PinPivotScale(const ImVec2 &scale) {
+void ImGuiEx::internal::PinPivotScale(const ImVec2 &scale) {
     s_Editor->GetNodeBuilder().PinPivotScale(scale);
 }
 
-void ax::NodeEditor::PinPivotAlignment(const ImVec2 &alignment) {
+void ImGuiEx::internal::PinPivotAlignment(const ImVec2 &alignment) {
     s_Editor->GetNodeBuilder().PinPivotAlignment(alignment);
 }
 
-void ax::NodeEditor::EndPin() {
+void ImGuiEx::internal::EndPin() {
     s_Editor->GetNodeBuilder().EndPin();
 }
 
-void ax::NodeEditor::Group(const ImVec2 &size) {
+void ImGuiEx::internal::Group(const ImVec2 &size) {
     s_Editor->GetNodeBuilder().Group(size);
 }
 
-void ax::NodeEditor::EndNode() {
+void ImGuiEx::internal::EndNode() {
     s_Editor->GetNodeBuilder().End();
 }
 
-bool ax::NodeEditor::BeginGroupHint(NodeId nodeId) {
+bool ImGuiEx::internal::BeginGroupHint(NodeId nodeId) {
     return s_Editor->GetHintBuilder().Begin(nodeId);
 }
 
-ImVec2 ax::NodeEditor::GetGroupMin() {
+ImVec2 ImGuiEx::internal::GetGroupMin() {
     return s_Editor->GetHintBuilder().GetGroupMin();
 }
 
-ImVec2 ax::NodeEditor::GetGroupMax() {
+ImVec2 ImGuiEx::internal::GetGroupMax() {
     return s_Editor->GetHintBuilder().GetGroupMax();
 }
 
-ImDrawList *ax::NodeEditor::GetHintForegroundDrawList() {
+ImDrawList *ImGuiEx::internal::GetHintForegroundDrawList() {
     return s_Editor->GetHintBuilder().GetForegroundDrawList();
 }
 
-ImDrawList *ax::NodeEditor::GetHintBackgroundDrawList() {
+ImDrawList *ImGuiEx::internal::GetHintBackgroundDrawList() {
     return s_Editor->GetHintBuilder().GetBackgroundDrawList();
 }
 
-void ax::NodeEditor::EndGroupHint() {
+void ImGuiEx::internal::EndGroupHint() {
     s_Editor->GetHintBuilder().End();
 }
 
-ImDrawList *ax::NodeEditor::GetNodeBackgroundDrawList(NodeId nodeId) {
+ImDrawList *ImGuiEx::internal::GetNodeBackgroundDrawList(NodeId nodeId) {
     if (auto node = s_Editor->FindNode(nodeId))
         return s_Editor->GetNodeBuilder().GetUserBackgroundDrawList(node);
     else
         return nullptr;
 }
 
-bool ax::NodeEditor::Link(LinkId id, PinId startPinId, PinId endPinId, const ImVec4 &color/* = ImVec4(1, 1, 1, 1)*/,
-                          float thickness/* = 1.0f*/) {
+bool ImGuiEx::internal::Link(LinkId id, PinId startPinId, PinId endPinId, const ImVec4 &color/* = ImVec4(1, 1, 1, 1)*/,
+                             float thickness/* = 1.0f*/) {
     return s_Editor->DoLink(id, startPinId, endPinId, ImColor(color), thickness);
 }
 
-void ax::NodeEditor::Flow(LinkId linkId, FlowDirection direction) {
+void ImGuiEx::internal::Flow(LinkId linkId, FlowDirection direction) {
     if (auto link = s_Editor->FindLink(linkId))
         s_Editor->Flow(link, direction);
 }
 
-bool ax::NodeEditor::BeginCreate(const ImVec4 &color, float thickness) {
+bool ImGuiEx::internal::BeginCreate(const ImVec4 &color, float thickness) {
     auto &context = s_Editor->GetItemCreator();
 
     if (context.Begin()) {
@@ -194,16 +194,16 @@ bool ax::NodeEditor::BeginCreate(const ImVec4 &color, float thickness) {
         return false;
 }
 
-bool ax::NodeEditor::QueryNewLink(PinId *startId, PinId *endId) {
-    using Result = ax::NodeEditor::Detail::CreateItemAction::Result;
+bool ImGuiEx::internal::QueryNewLink(PinId *startId, PinId *endId) {
+    using Result = ImGuiEx::internal::Detail::CreateItemAction::Result;
 
     auto &context = s_Editor->GetItemCreator();
 
     return context.QueryLink(startId, endId) == Result::True;
 }
 
-bool ax::NodeEditor::QueryNewLink(PinId *startId, PinId *endId, const ImVec4 &color, float thickness) {
-    using Result = ax::NodeEditor::Detail::CreateItemAction::Result;
+bool ImGuiEx::internal::QueryNewLink(PinId *startId, PinId *endId, const ImVec4 &color, float thickness) {
+    using Result = ImGuiEx::internal::Detail::CreateItemAction::Result;
 
     auto &context = s_Editor->GetItemCreator();
 
@@ -214,16 +214,16 @@ bool ax::NodeEditor::QueryNewLink(PinId *startId, PinId *endId, const ImVec4 &co
     return result == Result::True;
 }
 
-bool ax::NodeEditor::QueryNewNode(PinId *pinId) {
-    using Result = ax::NodeEditor::Detail::CreateItemAction::Result;
+bool ImGuiEx::internal::QueryNewNode(PinId *pinId) {
+    using Result = ImGuiEx::internal::Detail::CreateItemAction::Result;
 
     auto &context = s_Editor->GetItemCreator();
 
     return context.QueryNode(pinId) == Result::True;
 }
 
-bool ax::NodeEditor::QueryNewNode(PinId *pinId, const ImVec4 &color, float thickness) {
-    using Result = ax::NodeEditor::Detail::CreateItemAction::Result;
+bool ImGuiEx::internal::QueryNewNode(PinId *pinId, const ImVec4 &color, float thickness) {
+    using Result = ImGuiEx::internal::Detail::CreateItemAction::Result;
 
     auto &context = s_Editor->GetItemCreator();
 
@@ -234,16 +234,16 @@ bool ax::NodeEditor::QueryNewNode(PinId *pinId, const ImVec4 &color, float thick
     return result == Result::True;
 }
 
-bool ax::NodeEditor::AcceptNewItem() {
-    using Result = ax::NodeEditor::Detail::CreateItemAction::Result;
+bool ImGuiEx::internal::AcceptNewItem() {
+    using Result = ImGuiEx::internal::Detail::CreateItemAction::Result;
 
     auto &context = s_Editor->GetItemCreator();
 
     return context.AcceptItem() == Result::True;
 }
 
-bool ax::NodeEditor::AcceptNewItem(const ImVec4 &color, float thickness) {
-    using Result = ax::NodeEditor::Detail::CreateItemAction::Result;
+bool ImGuiEx::internal::AcceptNewItem(const ImVec4 &color, float thickness) {
+    using Result = ImGuiEx::internal::Detail::CreateItemAction::Result;
 
     auto &context = s_Editor->GetItemCreator();
 
@@ -254,14 +254,14 @@ bool ax::NodeEditor::AcceptNewItem(const ImVec4 &color, float thickness) {
     return result == Result::True;
 }
 
-void ax::NodeEditor::RejectNewItem() {
+void ImGuiEx::internal::RejectNewItem() {
     auto &context = s_Editor->GetItemCreator();
 
     context.RejectItem();
 }
 
-void ax::NodeEditor::RejectNewItem(const ImVec4 &color, float thickness) {
-    using Result = ax::NodeEditor::Detail::CreateItemAction::Result;
+void ImGuiEx::internal::RejectNewItem(const ImVec4 &color, float thickness) {
+    using Result = ImGuiEx::internal::Detail::CreateItemAction::Result;
 
     auto &context = s_Editor->GetItemCreator();
 
@@ -269,137 +269,137 @@ void ax::NodeEditor::RejectNewItem(const ImVec4 &color, float thickness) {
         context.SetStyle(ImColor(color), thickness);
 }
 
-void ax::NodeEditor::EndCreate() {
+void ImGuiEx::internal::EndCreate() {
     auto &context = s_Editor->GetItemCreator();
 
     context.End();
 }
 
-bool ax::NodeEditor::BeginDelete() {
+bool ImGuiEx::internal::BeginDelete() {
     auto &context = s_Editor->GetItemDeleter();
 
     return context.Begin();
 }
 
-bool ax::NodeEditor::QueryDeletedLink(LinkId *linkId, PinId *startId, PinId *endId) {
+bool ImGuiEx::internal::QueryDeletedLink(LinkId *linkId, PinId *startId, PinId *endId) {
     auto &context = s_Editor->GetItemDeleter();
 
     return context.QueryLink(linkId, startId, endId);
 }
 
-bool ax::NodeEditor::QueryDeletedNode(NodeId *nodeId) {
+bool ImGuiEx::internal::QueryDeletedNode(NodeId *nodeId) {
     auto &context = s_Editor->GetItemDeleter();
 
     return context.QueryNode(nodeId);
 }
 
-bool ax::NodeEditor::AcceptDeletedItem(bool deleteDependencies) {
+bool ImGuiEx::internal::AcceptDeletedItem(bool deleteDependencies) {
     auto &context = s_Editor->GetItemDeleter();
 
     return context.AcceptItem(deleteDependencies);
 }
 
-void ax::NodeEditor::RejectDeletedItem() {
+void ImGuiEx::internal::RejectDeletedItem() {
     auto &context = s_Editor->GetItemDeleter();
 
     context.RejectItem();
 }
 
-void ax::NodeEditor::EndDelete() {
+void ImGuiEx::internal::EndDelete() {
     auto &context = s_Editor->GetItemDeleter();
 
     context.End();
 }
 
-void ax::NodeEditor::SetNodePosition(NodeId nodeId, const ImVec2 &position) {
+void ImGuiEx::internal::SetNodePosition(NodeId nodeId, const ImVec2 &position) {
     s_Editor->SetNodePosition(nodeId, position);
 }
 
-void ax::NodeEditor::SetGroupSize(NodeId nodeId, const ImVec2 &size) {
+void ImGuiEx::internal::SetGroupSize(NodeId nodeId, const ImVec2 &size) {
     s_Editor->SetGroupSize(nodeId, size);
 }
 
-ImVec2 ax::NodeEditor::GetNodePosition(NodeId nodeId) {
+ImVec2 ImGuiEx::internal::GetNodePosition(NodeId nodeId) {
     return s_Editor->GetNodePosition(nodeId);
 }
 
-ImVec2 ax::NodeEditor::GetNodeSize(NodeId nodeId) {
+ImVec2 ImGuiEx::internal::GetNodeSize(NodeId nodeId) {
     return s_Editor->GetNodeSize(nodeId);
 }
 
-void ax::NodeEditor::CenterNodeOnScreen(NodeId nodeId) {
+void ImGuiEx::internal::CenterNodeOnScreen(NodeId nodeId) {
     if (auto node = s_Editor->FindNode(nodeId))
         node->CenterOnScreenInNextFrame();
 }
 
-void ax::NodeEditor::SetNodeZPosition(NodeId nodeId, float z) {
+void ImGuiEx::internal::SetNodeZPosition(NodeId nodeId, float z) {
     s_Editor->SetNodeZPosition(nodeId, z);
 }
 
-float ax::NodeEditor::GetNodeZPosition(NodeId nodeId) {
+float ImGuiEx::internal::GetNodeZPosition(NodeId nodeId) {
     return s_Editor->GetNodeZPosition(nodeId);
 }
 
-void ax::NodeEditor::RestoreNodeState(NodeId nodeId) {
+void ImGuiEx::internal::RestoreNodeState(NodeId nodeId) {
     if (auto node = s_Editor->FindNode(nodeId))
         s_Editor->MarkNodeToRestoreState(node);
 }
 
-void ax::NodeEditor::Suspend() {
+void ImGuiEx::internal::Suspend() {
     s_Editor->Suspend();
 }
 
-void ax::NodeEditor::Resume() {
+void ImGuiEx::internal::Resume() {
     s_Editor->Resume();
 }
 
-bool ax::NodeEditor::IsSuspended() {
+bool ImGuiEx::internal::IsSuspended() {
     return s_Editor->IsSuspended();
 }
 
-bool ax::NodeEditor::IsActive() {
+bool ImGuiEx::internal::IsActive() {
     return s_Editor->IsFocused();
 }
 
-bool ax::NodeEditor::HasSelectionChanged() {
+bool ImGuiEx::internal::HasSelectionChanged() {
     return s_Editor->HasSelectionChanged();
 }
 
-int ax::NodeEditor::GetSelectedObjectCount() {
+int ImGuiEx::internal::GetSelectedObjectCount() {
     return (int) s_Editor->GetSelectedObjects().size();
 }
 
-int ax::NodeEditor::GetSelectedNodes(NodeId *nodes, int size) {
+int ImGuiEx::internal::GetSelectedNodes(NodeId *nodes, int size) {
     return BuildIdList(s_Editor->GetSelectedObjects(), nodes, size, [](auto object) {
         return object->AsNode() != nullptr;
     });
 }
 
-int ax::NodeEditor::GetSelectedLinks(LinkId *links, int size) {
+int ImGuiEx::internal::GetSelectedLinks(LinkId *links, int size) {
     return BuildIdList(s_Editor->GetSelectedObjects(), links, size, [](auto object) {
         return object->AsLink() != nullptr;
     });
 }
 
-bool ax::NodeEditor::IsNodeSelected(NodeId nodeId) {
+bool ImGuiEx::internal::IsNodeSelected(NodeId nodeId) {
     if (auto node = s_Editor->FindNode(nodeId))
         return s_Editor->IsSelected(node);
     else
         return false;
 }
 
-bool ax::NodeEditor::IsLinkSelected(LinkId linkId) {
+bool ImGuiEx::internal::IsLinkSelected(LinkId linkId) {
     if (auto link = s_Editor->FindLink(linkId))
         return s_Editor->IsSelected(link);
     else
         return false;
 }
 
-void ax::NodeEditor::ClearSelection() {
+void ImGuiEx::internal::ClearSelection() {
     s_Editor->ClearSelection();
 }
 
-void ax::NodeEditor::SelectNode(NodeId nodeId, bool append) {
+void ImGuiEx::internal::SelectNode(NodeId nodeId, bool append) {
     if (auto node = s_Editor->FindNode(nodeId)) {
         if (append)
             s_Editor->SelectObject(node);
@@ -408,7 +408,7 @@ void ax::NodeEditor::SelectNode(NodeId nodeId, bool append) {
     }
 }
 
-void ax::NodeEditor::SelectLink(LinkId linkId, bool append) {
+void ImGuiEx::internal::SelectLink(LinkId linkId, bool append) {
     if (auto link = s_Editor->FindLink(linkId)) {
         if (append)
             s_Editor->SelectObject(link);
@@ -417,167 +417,167 @@ void ax::NodeEditor::SelectLink(LinkId linkId, bool append) {
     }
 }
 
-void ax::NodeEditor::DeselectNode(NodeId nodeId) {
+void ImGuiEx::internal::DeselectNode(NodeId nodeId) {
     if (auto node = s_Editor->FindNode(nodeId))
         s_Editor->DeselectObject(node);
 }
 
-void ax::NodeEditor::DeselectLink(LinkId linkId) {
+void ImGuiEx::internal::DeselectLink(LinkId linkId) {
     if (auto link = s_Editor->FindLink(linkId))
         s_Editor->DeselectObject(link);
 }
 
-bool ax::NodeEditor::DeleteNode(NodeId nodeId) {
+bool ImGuiEx::internal::DeleteNode(NodeId nodeId) {
     if (auto node = s_Editor->FindNode(nodeId))
         return s_Editor->GetItemDeleter().Add(node);
     else
         return false;
 }
 
-bool ax::NodeEditor::DeleteLink(LinkId linkId) {
+bool ImGuiEx::internal::DeleteLink(LinkId linkId) {
     if (auto link = s_Editor->FindLink(linkId))
         return s_Editor->GetItemDeleter().Add(link);
     else
         return false;
 }
 
-bool ax::NodeEditor::HasAnyLinks(NodeId nodeId) {
+bool ImGuiEx::internal::HasAnyLinks(NodeId nodeId) {
     return s_Editor->HasAnyLinks(nodeId);
 }
 
-bool ax::NodeEditor::HasAnyLinks(PinId pinId) {
+bool ImGuiEx::internal::HasAnyLinks(PinId pinId) {
     return s_Editor->HasAnyLinks(pinId);
 }
 
-int ax::NodeEditor::BreakLinks(NodeId nodeId) {
+int ImGuiEx::internal::BreakLinks(NodeId nodeId) {
     return s_Editor->BreakLinks(nodeId);
 }
 
-int ax::NodeEditor::BreakLinks(PinId pinId) {
+int ImGuiEx::internal::BreakLinks(PinId pinId) {
     return s_Editor->BreakLinks(pinId);
 }
 
-void ax::NodeEditor::NavigateToContent(float duration) {
+void ImGuiEx::internal::NavigateToContent(float duration) {
     s_Editor->NavigateTo(s_Editor->GetContentBounds(), true, duration);
 }
 
-void ax::NodeEditor::NavigateToSelection(bool zoomIn, float duration) {
+void ImGuiEx::internal::NavigateToSelection(bool zoomIn, float duration) {
     s_Editor->NavigateTo(s_Editor->GetSelectionBounds(), zoomIn, duration);
 }
 
-bool ax::NodeEditor::ShowNodeContextMenu(NodeId *nodeId) {
+bool ImGuiEx::internal::ShowNodeContextMenu(NodeId *nodeId) {
     return s_Editor->GetContextMenu().ShowNodeContextMenu(nodeId);
 }
 
-bool ax::NodeEditor::ShowPinContextMenu(PinId *pinId) {
+bool ImGuiEx::internal::ShowPinContextMenu(PinId *pinId) {
     return s_Editor->GetContextMenu().ShowPinContextMenu(pinId);
 }
 
-bool ax::NodeEditor::ShowLinkContextMenu(LinkId *linkId) {
+bool ImGuiEx::internal::ShowLinkContextMenu(LinkId *linkId) {
     return s_Editor->GetContextMenu().ShowLinkContextMenu(linkId);
 }
 
-bool ax::NodeEditor::ShowBackgroundContextMenu() {
+bool ImGuiEx::internal::ShowBackgroundContextMenu() {
     return s_Editor->GetContextMenu().ShowBackgroundContextMenu();
 }
 
-void ax::NodeEditor::EnableShortcuts(bool enable) {
+void ImGuiEx::internal::EnableShortcuts(bool enable) {
     s_Editor->EnableShortcuts(enable);
 }
 
-bool ax::NodeEditor::AreShortcutsEnabled() {
+bool ImGuiEx::internal::AreShortcutsEnabled() {
     return s_Editor->AreShortcutsEnabled();
 }
 
-bool ax::NodeEditor::BeginShortcut() {
+bool ImGuiEx::internal::BeginShortcut() {
     return s_Editor->GetShortcut().Begin();
 }
 
-bool ax::NodeEditor::AcceptCut() {
+bool ImGuiEx::internal::AcceptCut() {
     return s_Editor->GetShortcut().AcceptCut();
 }
 
-bool ax::NodeEditor::AcceptCopy() {
+bool ImGuiEx::internal::AcceptCopy() {
     return s_Editor->GetShortcut().AcceptCopy();
 }
 
-bool ax::NodeEditor::AcceptPaste() {
+bool ImGuiEx::internal::AcceptPaste() {
     return s_Editor->GetShortcut().AcceptPaste();
 }
 
-bool ax::NodeEditor::AcceptDuplicate() {
+bool ImGuiEx::internal::AcceptDuplicate() {
     return s_Editor->GetShortcut().AcceptDuplicate();
 }
 
-bool ax::NodeEditor::AcceptCreateNode() {
+bool ImGuiEx::internal::AcceptCreateNode() {
     return s_Editor->GetShortcut().AcceptCreateNode();
 }
 
-int ax::NodeEditor::GetActionContextSize() {
+int ImGuiEx::internal::GetActionContextSize() {
     return static_cast<int>(s_Editor->GetShortcut().m_Context.size());
 }
 
-int ax::NodeEditor::GetActionContextNodes(NodeId *nodes, int size) {
+int ImGuiEx::internal::GetActionContextNodes(NodeId *nodes, int size) {
     return BuildIdList(s_Editor->GetSelectedObjects(), nodes, size, [](auto object) {
         return object->AsNode() != nullptr;
     });
 }
 
-int ax::NodeEditor::GetActionContextLinks(LinkId *links, int size) {
+int ImGuiEx::internal::GetActionContextLinks(LinkId *links, int size) {
     return BuildIdList(s_Editor->GetSelectedObjects(), links, size, [](auto object) {
         return object->AsLink() != nullptr;
     });
 }
 
-void ax::NodeEditor::EndShortcut() {
+void ImGuiEx::internal::EndShortcut() {
     return s_Editor->GetShortcut().End();
 }
 
-float ax::NodeEditor::GetCurrentZoom() {
+float ImGuiEx::internal::GetCurrentZoom() {
     return s_Editor->GetView().InvScale;
 }
 
-ax::NodeEditor::NodeId ax::NodeEditor::GetHoveredNode() {
+ImGuiEx::internal::NodeId ImGuiEx::internal::GetHoveredNode() {
     return s_Editor->GetHoveredNode();
 }
 
-ax::NodeEditor::PinId ax::NodeEditor::GetHoveredPin() {
+ImGuiEx::internal::PinId ImGuiEx::internal::GetHoveredPin() {
     return s_Editor->GetHoveredPin();
 }
 
-ax::NodeEditor::LinkId ax::NodeEditor::GetHoveredLink() {
+ImGuiEx::internal::LinkId ImGuiEx::internal::GetHoveredLink() {
     return s_Editor->GetHoveredLink();
 }
 
-ax::NodeEditor::NodeId ax::NodeEditor::GetDoubleClickedNode() {
+ImGuiEx::internal::NodeId ImGuiEx::internal::GetDoubleClickedNode() {
     return s_Editor->GetDoubleClickedNode();
 }
 
-ax::NodeEditor::PinId ax::NodeEditor::GetDoubleClickedPin() {
+ImGuiEx::internal::PinId ImGuiEx::internal::GetDoubleClickedPin() {
     return s_Editor->GetDoubleClickedPin();
 }
 
-ax::NodeEditor::LinkId ax::NodeEditor::GetDoubleClickedLink() {
+ImGuiEx::internal::LinkId ImGuiEx::internal::GetDoubleClickedLink() {
     return s_Editor->GetDoubleClickedLink();
 }
 
-bool ax::NodeEditor::IsBackgroundClicked() {
+bool ImGuiEx::internal::IsBackgroundClicked() {
     return s_Editor->IsBackgroundClicked();
 }
 
-bool ax::NodeEditor::IsBackgroundDoubleClicked() {
+bool ImGuiEx::internal::IsBackgroundDoubleClicked() {
     return s_Editor->IsBackgroundDoubleClicked();
 }
 
-ImGuiMouseButton ax::NodeEditor::GetBackgroundClickButtonIndex() {
+ImGuiMouseButton ImGuiEx::internal::GetBackgroundClickButtonIndex() {
     return s_Editor->GetBackgroundClickButtonIndex();
 }
 
-ImGuiMouseButton ax::NodeEditor::GetBackgroundDoubleClickButtonIndex() {
+ImGuiMouseButton ImGuiEx::internal::GetBackgroundDoubleClickButtonIndex() {
     return s_Editor->GetBackgroundDoubleClickButtonIndex();
 }
 
-bool ax::NodeEditor::GetLinkPins(LinkId linkId, PinId *startPinId, PinId *endPinId) {
+bool ImGuiEx::internal::GetLinkPins(LinkId linkId, PinId *startPinId, PinId *endPinId) {
     auto link = s_Editor->FindLink(linkId);
     if (!link)
         return false;
@@ -590,26 +590,26 @@ bool ax::NodeEditor::GetLinkPins(LinkId linkId, PinId *startPinId, PinId *endPin
     return true;
 }
 
-bool ax::NodeEditor::PinHadAnyLinks(PinId pinId) {
+bool ImGuiEx::internal::PinHadAnyLinks(PinId pinId) {
     return s_Editor->PinHadAnyLinks(pinId);
 }
 
-ImVec2 ax::NodeEditor::GetScreenSize() {
+ImVec2 ImGuiEx::internal::GetScreenSize() {
     return s_Editor->GetRect().GetSize();
 }
 
-ImVec2 ax::NodeEditor::ScreenToCanvas(const ImVec2 &pos) {
+ImVec2 ImGuiEx::internal::ScreenToCanvas(const ImVec2 &pos) {
     return s_Editor->ToCanvas(pos);
 }
 
-ImVec2 ax::NodeEditor::CanvasToScreen(const ImVec2 &pos) {
+ImVec2 ImGuiEx::internal::CanvasToScreen(const ImVec2 &pos) {
     return s_Editor->ToScreen(pos);
 }
 
-int ax::NodeEditor::GetNodeCount() {
+int ImGuiEx::internal::GetNodeCount() {
     return s_Editor->CountLiveNodes();
 }
 
-int ax::NodeEditor::GetOrderedNodeIds(NodeId *nodes, int size) {
+int ImGuiEx::internal::GetOrderedNodeIds(NodeId *nodes, int size) {
     return s_Editor->GetNodeIds(nodes, size);
 }

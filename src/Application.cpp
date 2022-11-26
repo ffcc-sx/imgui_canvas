@@ -117,9 +117,9 @@ int Application::exec(const std::function<void()> &embed) {
     //IM_ASSERT(font != NULL);
 
     // TODO: The ImGuiEx using config to save layout, try make it optional.
-    ax::NodeEditor::Config config;
+    ImGuiEx::internal::Config config;
     config.SettingsFile = "Simple.json";
-    auto m_Context = ax::NodeEditor::CreateEditor(&config);
+    auto m_Context = ImGuiEx::internal::CreateEditor(&config);
 
     // Main loop
     while (!glfwWindowShouldClose(_window)) {
@@ -142,7 +142,7 @@ int Application::exec(const std::function<void()> &embed) {
         glfwSwapBuffers(_window);
     }
 
-    ax::NodeEditor::DestroyEditor(m_Context);
+    ImGuiEx::internal::DestroyEditor(m_Context);
 
     //==================== Exit application::exec() loop. ====================//
     ImGui_ImplOpenGL3_Shutdown();
