@@ -1,51 +1,10 @@
 # include "imgui_internal_ex.h"
 // SX: Import for build.
 #include <imgui_internal.h>
-# include <cstdio> // snprintf
-# include <string>
-# include <fstream>
-# include <bitset>
-# include <climits>
-# include <algorithm>
-# include <sstream>
-# include <streambuf>
-# include <type_traits>
-
-// https://stackoverflow.com/a/8597498
-# define DECLARE_HAS_NESTED(Name, Member)                                          \
-    template<class T>                                                              \
-    struct has_nested_ ## Name                                                     \
-    {                                                                              \
-        typedef char yes;                                                          \
-        typedef yes(&no)[2];                                                       \
-                                                                                   \
-        template<class U> static yes test(decltype(U::Member)*);                   \
-        template<class U> static no  test(...);                                    \
-                                                                                   \
-        static bool const value = sizeof(test<T>(0)) == sizeof(yes);               \
-    };
-
 
 namespace ImGuiEx {
     namespace api {
         namespace internal {
-
-# define DECLARE_KEY_TESTER(Key)                                                                    \
-    DECLARE_HAS_NESTED(Key, Key)                                                                    \
-    struct KeyTester_ ## Key                                                                        \
-    {                                                                                               \
-        template <typename T>                                                                       \
-        static int Get(typename std::enable_if<has_nested_ ## Key<ImGuiKey>::value, T>::type*)     \
-        {                                                                                           \
-            return ImGui::GetKeyIndex(T::Key);                                                      \
-        }                                                                                           \
-                                                                                                    \
-        template <typename T>                                                                       \
-        static int Get(typename std::enable_if<!has_nested_ ## Key<ImGuiKey>::value, T>::type*)    \
-        {                                                                                           \
-            return -1;                                                                              \
-        }                                                                                           \
-    }
 
             DECLARE_KEY_TESTER(ImGuiKey_F);
 
@@ -65,7 +24,7 @@ namespace ImGuiEx {
 
 
 //------------------------------------------------------------------------------
-namespace ed = ImGuiEx::api::Detail;
+namespace ed = ImGuiEx::api::internal;
 
 static const int c_BackgroundChannelCount = 1;
 static const int c_LinkChannelCount = 4;

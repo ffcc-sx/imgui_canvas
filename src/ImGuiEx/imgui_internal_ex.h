@@ -27,7 +27,7 @@ namespace ImGuiEx {
     namespace api {
         namespace internal {
 //------------------------------------------------------------------------------
-            namespace ed = ImGuiEx::api::Detail;
+            namespace ed = ImGuiEx::api::internal;
             namespace json = crude_json;
 //------------------------------------------------------------------------------
             using std::vector;
@@ -35,8 +35,6 @@ namespace ImGuiEx {
 //------------------------------------------------------------------------------
             void Log(const char *fmt, ...);
 //------------------------------------------------------------------------------
-            //inline ImRect ToRect(const ax::rectf& rect);
-            //inline ImRect ToRect(const ax::rect& rect);
             inline ImRect ImGui_GetItemRect();
             inline ImVec2 ImGui_GetMouseClickPos(ImGuiMouseButton buttonIndex);
 
@@ -62,22 +60,17 @@ namespace ImGuiEx {
             }
 
             struct FringeScaleScope {
-
-                FringeScaleScope(float scale)
+                explicit FringeScaleScope(float scale)
                         : m_LastFringeScale(ImFringeScaleRef(ImGui::GetWindowDrawList())) {
                     ImFringeScaleRef(ImGui::GetWindowDrawList()) = scale;
                 }
-
                 ~FringeScaleScope() {
                     ImFringeScaleRef(ImGui::GetWindowDrawList()) = m_LastFringeScale;
                 }
-
             private:
                 float m_LastFringeScale;
             };
 
-
-//------------------------------------------------------------------------------
             enum class ObjectType {
                 None,
                 Node,
@@ -99,42 +92,30 @@ namespace ImGuiEx {
                 using Super::Super;
 
                 ObjectId() : Super(Invalid), m_Type(ObjectType::None) {}
-
                 ObjectId(PinId pinId) : Super(pinId.AsPointer()), m_Type(ObjectType::Pin) {}
-
                 ObjectId(NodeId nodeId) : Super(nodeId.AsPointer()), m_Type(ObjectType::Node) {}
-
                 ObjectId(LinkId linkId) : Super(linkId.AsPointer()), m_Type(ObjectType::Link) {}
 
                 explicit operator PinId() const { return AsPinId(); }
-
                 explicit operator NodeId() const { return AsNodeId(); }
-
                 explicit operator LinkId() const { return AsLinkId(); }
 
                 PinId AsPinId() const {
                     IM_ASSERT(IsPinId());
                     return PinId(AsPointer());
                 }
-
                 NodeId AsNodeId() const {
                     IM_ASSERT(IsNodeId());
                     return NodeId(AsPointer());
                 }
-
                 LinkId AsLinkId() const {
                     IM_ASSERT(IsLinkId());
                     return LinkId(AsPointer());
                 }
-
                 bool IsPinId() const { return m_Type == ObjectType::Pin; }
-
                 bool IsNodeId() const { return m_Type == ObjectType::Node; }
-
                 bool IsLinkId() const { return m_Type == ObjectType::Link; }
-
                 ObjectType Type() const { return m_Type; }
-
             private:
                 ObjectType m_Type;
             };
@@ -149,15 +130,10 @@ namespace ImGuiEx {
             struct ObjectWrapper {
                 Id m_ID;
                 T *m_Object;
-
                 T *operator->() { return m_Object; }
-
                 const T *operator->() const { return m_Object; }
-
                 operator T *() { return m_Object; }
-
                 operator const T *() const { return m_Object; }
-
                 bool operator<(const ObjectWrapper &rhs) const {
                     return m_ID.AsPointer() < rhs.m_ID.AsPointer();
                 }
@@ -291,24 +267,24 @@ namespace ImGuiEx {
                           m_SnapLinkToDir(true), m_HasConnection(false), m_HadConnection(false) {
                 }
 
-                virtual ObjectId ID() override { return m_ID; }
+                ObjectId ID() override { return m_ID; }
 
-                virtual void Reset() override final {
+                void Reset() final {
                     m_HadConnection = m_HasConnection && m_IsLive;
                     m_HasConnection = false;
 
                     Object::Reset();
                 }
 
-                virtual void Draw(ImDrawList *drawList, DrawFlags flags = None) override final;
+                void Draw(ImDrawList *drawList, DrawFlags flags = None) override final;
 
                 ImVec2 GetClosestPoint(const ImVec2 &p) const;
 
                 ImLine GetClosestLine(const Pin *pin) const;
 
-                virtual ImRect GetBounds() const override final { return m_Bounds; }
+                ImRect GetBounds() const final { return m_Bounds; }
 
-                virtual Pin *AsPin() override final { return this; }
+                Pin *AsPin() final { return this; }
             };
 
             enum class NodeType {
@@ -329,15 +305,12 @@ namespace ImGuiEx {
                 BottomLeft = Bottom | Left,
                 BottomRight = Bottom | Right,
             };
-
             inline NodeRegion operator|(NodeRegion lhs, NodeRegion rhs) {
                 return static_cast<NodeRegion>(static_cast<uint8_t>(lhs) | static_cast<uint8_t>(rhs));
             }
-
             inline NodeRegion operator&(NodeRegion lhs, NodeRegion rhs) {
                 return static_cast<NodeRegion>(static_cast<uint8_t>(lhs) & static_cast<uint8_t>(rhs));
             }
-
 
             struct Node final : Object {
                 using IdType = NodeId;
@@ -1268,15 +1241,12 @@ namespace ImGuiEx {
                 None = 0,
                 KeepSplitter = 1
             };
-
             inline SuspendFlags operator|(SuspendFlags lhs, SuspendFlags rhs) {
                 return static_cast<SuspendFlags>(static_cast<uint8_t>(lhs) | static_cast<uint8_t>(rhs));
             }
-
             inline SuspendFlags operator&(SuspendFlags lhs, SuspendFlags rhs) {
                 return static_cast<SuspendFlags>(static_cast<uint8_t>(lhs) & static_cast<uint8_t>(rhs));
             }
-
 
             struct EditorContext {
                 EditorContext(const ImGuiEx::api::Config *config = nullptr);
@@ -1587,8 +1557,6 @@ namespace ImGuiEx {
                 ImDrawListSplitter m_Splitter;
             };
 
-
-//------------------------------------------------------------------------------
         } // namespace Detail
     } // namespace Editor
 } // namespace ax
@@ -1603,24 +1571,6 @@ namespace ImGuiEx {
     namespace api {
         namespace internal {
 
-
-//------------------------------------------------------------------------------
-//inline ImRect ToRect(const ax::rectf& rect)
-//{
-//    return ImRect(
-//        to_imvec(rect.top_left()),
-//        to_imvec(rect.bottom_right())
-//    );
-//}
-//
-//inline ImRect ToRect(const ax::rect& rect)
-//{
-//    return ImRect(
-//        to_imvec(rect.top_left()),
-//        to_imvec(rect.bottom_right())
-//    );
-//}
-
             inline ImRect ImGui_GetItemRect() {
                 return ImRect(ImGui::GetItemRectMin(), ImGui::GetItemRectMax());
             }
@@ -1632,8 +1582,6 @@ namespace ImGuiEx {
                     return ImGui::GetMousePos();
             }
 
-
-//------------------------------------------------------------------------------
         } // namespace Detail
     } // namespace Editor
 } // namespace ax
