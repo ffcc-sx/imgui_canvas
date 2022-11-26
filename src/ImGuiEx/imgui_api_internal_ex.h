@@ -8,7 +8,7 @@
 #include "internal_common.h"
 
 namespace ImGuiEx {
-    namespace internal {
+    namespace api {
         template<typename T, typename Tag>
         struct SafeType {
             SafeType(T t) : m_Value(std::move(t)) { }

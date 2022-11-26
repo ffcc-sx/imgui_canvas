@@ -18,7 +18,7 @@
 #include "imgui.h"
 #include "backends/imgui_impl_glfw.h"
 #include "backends/imgui_impl_opengl3.h"
-#include "ImGuiEx/imgui_node_editor.h"
+#include "ImGuiEx/imguiEx.h"
 #include "Format.h"
 
 #include <iostream>
@@ -117,9 +117,9 @@ int Application::exec(const std::function<void()> &embed) {
     //IM_ASSERT(font != NULL);
 
     // TODO: The ImGuiEx using config to save layout, try make it optional.
-    ImGuiEx::internal::Config config;
+    ImGuiEx::api::Config config;
     config.SettingsFile = "Simple.json";
-    auto m_Context = ImGuiEx::internal::CreateEditor(&config);
+    auto m_Context = ImGuiEx::api::CreateEditor(&config);
 
     // Main loop
     while (!glfwWindowShouldClose(_window)) {
@@ -142,7 +142,7 @@ int Application::exec(const std::function<void()> &embed) {
         glfwSwapBuffers(_window);
     }
 
-    ImGuiEx::internal::DestroyEditor(m_Context);
+    ImGuiEx::api::DestroyEditor(m_Context);
 
     //==================== Exit application::exec() loop. ====================//
     ImGui_ImplOpenGL3_Shutdown();

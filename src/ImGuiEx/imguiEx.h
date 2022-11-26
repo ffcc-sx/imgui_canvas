@@ -5,14 +5,14 @@
 # include <utility> // std::move
 
 #include "internal_common.h"
-#include "internal_details.h"
+#include "imgui_api_internal_ex.h"
 
 //------------------------------------------------------------------------------
 # define IMGUI_NODE_EDITOR_VERSION      "0.9.2"
 # define IMGUI_NODE_EDITOR_VERSION_NUM  000902
 //------------------------------------------------------------------------------
 namespace ImGuiEx {
-    namespace internal {
+    namespace api {
         struct NodeId;
         struct LinkId;
         struct PinId;
@@ -54,7 +54,7 @@ namespace ImGuiEx {
         using ConfigSession = void (*)(void *userPointer);
 
         struct Config {
-            using CanvasSizeModeAlias = ImGuiEx::internal::CanvasSizeMode;
+            using CanvasSizeModeAlias = ImGuiEx::api::CanvasSizeMode;
 
             const char *SettingsFile;
             ConfigSession BeginSaveSession;
@@ -442,19 +442,20 @@ namespace ImGuiEx {
 
         ImVec2 CanvasToScreen(const ImVec2 &pos);
 
-        int GetNodeCount();                                // Returns number of submitted nodes since Begin() call
-        int GetOrderedNodeIds(NodeId *nodes,
-                              int size);    // Fills an array with node id's in order they're drawn; up to 'size` elements are set. Returns actual size of filled id's.
+        // Returns number of submitted nodes since Begin() call
+        int GetNodeCount();
+        // Fills an array with node id's in order they're drawn; up to 'size` elements are set. Returns actual size of filled id's.
+        int GetOrderedNodeIds(NodeId *nodes, int size);
 
-        struct NodeId final : internal::SafePointerType<NodeId> {
+        struct NodeId final : api::SafePointerType<NodeId> {
             using SafePointerType::SafePointerType;
         };
 
-        struct LinkId final : internal::SafePointerType<LinkId> {
+        struct LinkId final : api::SafePointerType<LinkId> {
             using SafePointerType::SafePointerType;
         };
 
-        struct PinId final : internal::SafePointerType<PinId> {
+        struct PinId final : api::SafePointerType<PinId> {
             using SafePointerType::SafePointerType;
         };
     } // end namespace Editor

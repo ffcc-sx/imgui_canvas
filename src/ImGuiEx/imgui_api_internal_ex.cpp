@@ -2,10 +2,10 @@
 // Created by sunny on 2022-11-27.
 //
 
-#include "internal_details.h"
+#include "imgui_api_internal_ex.h"
 
 namespace ImGuiEx {
-    namespace internal {
+    namespace api {
 
     }
 }

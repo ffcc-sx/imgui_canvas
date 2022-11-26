@@ -2,7 +2,7 @@
 
 
 //------------------------------------------------------------------------------
-# include "imgui_node_editor.h"
+# include "imguiEx.h"
 
 
 //------------------------------------------------------------------------------
@@ -16,7 +16,7 @@
 # include "imgui_canvas.h"
 # include "crude_json.h"
 
-#include "internal_details.h"
+#include "imgui_api_internal_ex.h"
 
 # include <vector>
 # include <string>
@@ -24,10 +24,10 @@
 
 //------------------------------------------------------------------------------
 namespace ImGuiEx {
-    namespace internal {
-        namespace Detail {
+    namespace api {
+        namespace internal {
 //------------------------------------------------------------------------------
-            namespace ed = ImGuiEx::internal::Detail;
+            namespace ed = ImGuiEx::api::Detail;
             namespace json = crude_json;
 //------------------------------------------------------------------------------
             using std::vector;
@@ -85,17 +85,17 @@ namespace ImGuiEx {
                 Pin
             };
 
-            using ImGuiEx::internal::PinKind;
-            using ImGuiEx::internal::StyleColor;
-            using ImGuiEx::internal::StyleVar;
-            using ImGuiEx::internal::SaveReasonFlags;
+            using ImGuiEx::api::PinKind;
+            using ImGuiEx::api::StyleColor;
+            using ImGuiEx::api::StyleVar;
+            using ImGuiEx::api::SaveReasonFlags;
 
-            using ImGuiEx::internal::NodeId;
-            using ImGuiEx::internal::PinId;
-            using ImGuiEx::internal::LinkId;
+            using ImGuiEx::api::NodeId;
+            using ImGuiEx::api::PinId;
+            using ImGuiEx::api::LinkId;
 
-            struct ObjectId final : internal::SafePointerType<ObjectId> {
-                using Super = internal::SafePointerType<ObjectId>;
+            struct ObjectId final : api::SafePointerType<ObjectId> {
+                using Super = api::SafePointerType<ObjectId>;
                 using Super::Super;
 
                 ObjectId() : Super(Invalid), m_Type(ObjectType::None) {}
@@ -1212,7 +1212,7 @@ namespace ImGuiEx {
                 ImDrawList *GetBackgroundDrawList();
             };
 
-            struct Style : ImGuiEx::internal::Style {
+            struct Style : ImGuiEx::api::Style {
                 void PushColor(StyleColor colorIndex, const ImVec4 &color);
 
                 void PopColor(int count = 1);
@@ -1248,8 +1248,8 @@ namespace ImGuiEx {
                 vector<VarModifier> m_VarStack;
             };
 
-            struct Config : ImGuiEx::internal::Config {
-                Config(const ImGuiEx::internal::Config *config);
+            struct Config : ImGuiEx::api::Config {
+                Config(const ImGuiEx::api::Config *config);
 
                 std::string Load();
 
@@ -1279,7 +1279,7 @@ namespace ImGuiEx {
 
 
             struct EditorContext {
-                EditorContext(const ImGuiEx::internal::Config *config = nullptr);
+                EditorContext(const ImGuiEx::api::Config *config = nullptr);
 
                 ~EditorContext();
 
@@ -1600,8 +1600,8 @@ namespace ImGuiEx {
 
 //------------------------------------------------------------------------------
 namespace ImGuiEx {
-    namespace internal {
-        namespace Detail {
+    namespace api {
+        namespace internal {
 
 
 //------------------------------------------------------------------------------

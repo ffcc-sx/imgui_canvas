@@ -1,4 +1,4 @@
-# include "imgui_node_editor_internal.h"
+# include "imgui_internal_ex.h"
 // SX: Import for build.
 #include <imgui_internal.h>
 # include <cstdio> // snprintf
@@ -27,8 +27,8 @@
 
 
 namespace ImGuiEx {
-    namespace internal {
-        namespace Detail {
+    namespace api {
+        namespace internal {
 
 # define DECLARE_KEY_TESTER(Key)                                                                    \
     DECLARE_HAS_NESTED(Key, Key)                                                                    \
@@ -65,7 +65,7 @@ namespace ImGuiEx {
 
 
 //------------------------------------------------------------------------------
-namespace ed = ImGuiEx::internal::Detail;
+namespace ed = ImGuiEx::api::Detail;
 
 static const int c_BackgroundChannelCount = 1;
 static const int c_LinkChannelCount = 4;
@@ -575,7 +575,7 @@ bool ed::Node::EndDrag() {
 }
 
 void ed::Node::Draw(ImDrawList *drawList, DrawFlags flags) {
-    if (flags == Detail::Object::None) {
+    if (flags == internal::Object::None) {
         drawList->ChannelsSetCurrent(m_Channel + c_NodeBackgroundChannel);
 
         drawList->AddRectFilled(
@@ -931,7 +931,7 @@ ImRect ed::Link::GetBounds() const {
 //------------------------------------------------------------------------------
 // Editor Context
 //------------------------------------------------------------------------------
-ed::EditorContext::EditorContext(const ImGuiEx::internal::Config *config)
+ed::EditorContext::EditorContext(const ImGuiEx::api::Config *config)
         : m_Config(config), m_EditorActiveId(0), m_IsFirstFrame(true), m_IsFocused(false), m_IsHovered(false),
           m_IsHoveredWithoutOverlapp(false), m_ShortcutsEnabled(true), m_Style(), m_Nodes(), m_Pins(), m_Links(),
           m_SelectionId(1), m_LastActiveLink(nullptr), m_Canvas(), m_IsCanvasVisible(false), m_NodeBuilder(this),
@@ -1034,13 +1034,13 @@ void ed::EditorContext::Begin(const char *id, const ImVec2 &size) {
         auto width = previousVisibleRect.GetHeight();
         auto height = previousVisibleRect.GetHeight();
 
-        if (m_Config.CanvasSizeMode == ImGuiEx::internal::CanvasSizeMode::FitVerticalView) {
+        if (m_Config.CanvasSizeMode == ImGuiEx::api::CanvasSizeMode::FitVerticalView) {
             height = previousVisibleRect.GetHeight();
             width = height * currentAspectRatio;
-        } else if (m_Config.CanvasSizeMode == ImGuiEx::internal::CanvasSizeMode::FitHorizontalView) {
+        } else if (m_Config.CanvasSizeMode == ImGuiEx::api::CanvasSizeMode::FitHorizontalView) {
             width = previousVisibleRect.GetWidth();
             height = width / currentAspectRatio;
-        } else if (m_Config.CanvasSizeMode == ImGuiEx::internal::CanvasSizeMode::CenterOnly) {
+        } else if (m_Config.CanvasSizeMode == ImGuiEx::api::CanvasSizeMode::CenterOnly) {
             width = currentVisibleRect.GetWidth();
             height = currentVisibleRect.GetHeight();
         }
@@ -1050,7 +1050,7 @@ void ed::EditorContext::Begin(const char *id, const ImVec2 &size) {
         previousVisibleRect.Min.y = centerY - 0.5f * height;
         previousVisibleRect.Max.y = centerY + 0.5f * height;
 
-        m_NavigateAction.NavigateTo(previousVisibleRect, Detail::NavigateAction::ZoomMode::Exact, 0.0f);
+        m_NavigateAction.NavigateTo(previousVisibleRect, internal::NavigateAction::ZoomMode::Exact, 0.0f);
     }
 
     m_Canvas.SetView(m_NavigateAction.GetView());
@@ -1451,7 +1451,7 @@ void ed::EditorContext::SetNodePosition(NodeId nodeId, const ImVec2 &position) {
     if (node->m_Bounds.Min != position) {
         node->m_Bounds.Translate(position - node->m_Bounds.Min);
         node->m_Bounds.Floor();
-        MakeDirty(internal::SaveReasonFlags::Position, node);
+        MakeDirty(api::SaveReasonFlags::Position, node);
     }
 }
 
@@ -1468,7 +1468,7 @@ void ed::EditorContext::SetGroupSize(NodeId nodeId, const ImVec2 &size) {
         node->m_GroupBounds.Min = node->m_Bounds.Min;
         node->m_GroupBounds.Max = node->m_Bounds.Min + size;
         node->m_GroupBounds.Floor();
-        MakeDirty(internal::SaveReasonFlags::Size, node);
+        MakeDirty(api::SaveReasonFlags::Size, node);
     }
 }
 
@@ -2473,13 +2473,13 @@ std::string ed::Settings::Serialize() {
         auto value = std::to_string(reinterpret_cast<uintptr_t>(id.AsPointer()));
         switch (id.Type()) {
             default:
-            case internal::Detail::ObjectType::None:
+            case api::internal::ObjectType::None:
                 return value;
-            case internal::Detail::ObjectType::Node:
+            case api::internal::ObjectType::Node:
                 return "node:" + value;
-            case internal::Detail::ObjectType::Link:
+            case api::internal::ObjectType::Link:
                 return "link:" + value;
-            case internal::Detail::ObjectType::Pin:
+            case api::internal::ObjectType::Pin:
                 return "pin:" + value;
         }
     };
@@ -5117,9 +5117,9 @@ ImVec4 *ed::Style::GetVarVec4Addr(StyleVar idx) {
 //------------------------------------------------------------------------------
 // Config
 //------------------------------------------------------------------------------
-ed::Config::Config(const ImGuiEx::internal::Config *config) {
+ed::Config::Config(const ImGuiEx::api::Config *config) {
     if (config)
-        *static_cast<ImGuiEx::internal::Config *>(this) = *config;
+        *static_cast<ImGuiEx::api::Config *>(this) = *config;
 }
 
 std::string ed::Config::Load() {
