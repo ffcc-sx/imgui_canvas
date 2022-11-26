@@ -14,8 +14,9 @@
 # include "imgui_extra_math.h"
 # include "imgui_bezier_math.h"
 # include "imgui_canvas.h"
-
 # include "crude_json.h"
+
+#include "internal_details.h"
 
 # include <vector>
 # include <string>
@@ -38,33 +39,8 @@ namespace ax {
             //inline ImRect ToRect(const ax::rect& rect);
             inline ImRect ImGui_GetItemRect();
             inline ImVec2 ImGui_GetMouseClickPos(ImGuiMouseButton buttonIndex);
-//------------------------------------------------------------------------------
-// https://stackoverflow.com/a/36079786
-# define DECLARE_HAS_MEMBER(__trait_name__, __member_name__)                         \
-                                                                                     \
-    template <typename __boost_has_member_T__>                                       \
-    class __trait_name__                                                             \
-    {                                                                                \
-        using check_type = ::std::remove_const_t<__boost_has_member_T__>;            \
-        struct no_type {char x[2];};                                                 \
-        using  yes_type = char;                                                      \
-                                                                                     \
-        struct  base { void __member_name__() {}};                                   \
-        struct mixin : public base, public check_type {};                            \
-                                                                                     \
-        template <void (base::*)()> struct aux {};                                   \
-                                                                                     \
-        template <typename U> static no_type  test(aux<&U::__member_name__>*);       \
-        template <typename U> static yes_type test(...);                             \
-                                                                                     \
-        public:                                                                      \
-                                                                                     \
-        static constexpr bool value = (sizeof(yes_type) == sizeof(test<mixin>(0)));  \
-    }
 
             DECLARE_HAS_MEMBER(HasFringeScale, _FringeScale);
-
-# undef DECLARE_HAS_MEMBER
 
             struct FringeScaleRef {
                 // Overload is present when ImDrawList does have _FringeScale member variable.
@@ -118,8 +94,8 @@ namespace ax {
             using ax::NodeEditor::PinId;
             using ax::NodeEditor::LinkId;
 
-            struct ObjectId final : Details::SafePointerType<ObjectId> {
-                using Super = Details::SafePointerType<ObjectId>;
+            struct ObjectId final : imgui_details::SafePointerType<ObjectId> {
+                using Super = imgui_details::SafePointerType<ObjectId>;
                 using Super::Super;
 
                 ObjectId() : Super(Invalid), m_Type(ObjectType::None) {}
