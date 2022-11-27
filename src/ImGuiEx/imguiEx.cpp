@@ -1546,7 +1546,7 @@ bool ed::EditorContext::IsSelected(Object *object) {
     // return std::find(m_SelectedObjects.begin(), m_SelectedObjects.end(), object) != m_SelectedObjects.end();
 }
 
-const ed::vector<ed::Object *> &ed::EditorContext::GetSelectedObjects() {
+const std::vector<ed::Object *> &ed::EditorContext::GetSelectedObjects() {
     return m_SelectedObjects;
 }
 
@@ -1579,7 +1579,7 @@ ed::Node *ed::EditorContext::FindNodeAt(const ImVec2 &p) {
 }
 
 void
-ed::EditorContext::FindNodesInRect(const ImRect &r, vector<Node *> &result, bool append, bool includeIntersecting) {
+ed::EditorContext::FindNodesInRect(const ImRect &r, std::vector<Node *> &result, bool append, bool includeIntersecting) {
     if (!append)
         result.resize(0);
 
@@ -1591,7 +1591,7 @@ ed::EditorContext::FindNodesInRect(const ImRect &r, vector<Node *> &result, bool
             result.push_back(node);
 }
 
-void ed::EditorContext::FindLinksInRect(const ImRect &r, vector<Link *> &result, bool append) {
+void ed::EditorContext::FindLinksInRect(const ImRect &r, std::vector<Link *> &result, bool append) {
     if (!append)
         result.resize(0);
 
@@ -1655,7 +1655,7 @@ int ed::EditorContext::BreakLinks(PinId pinId) {
     return result;
 }
 
-void ed::EditorContext::FindLinksForNode(NodeId nodeId, vector<Link *> &result, bool add) {
+void ed::EditorContext::FindLinksForNode(NodeId nodeId, std::vector<Link *> &result, bool add) {
     if (!add)
         result.clear();
 
@@ -2755,7 +2755,7 @@ void ed::FlowAnimation::UpdatePath() {
 }
 
 void ed::FlowAnimation::ClearPath() {
-    vector<CurvePoint>().swap(m_Path);
+    std::vector<CurvePoint>().swap(m_Path);
     m_PathLength = 0.0f;
 }
 
@@ -3606,8 +3606,8 @@ bool ed::SelectAction::Process(const Control &control) {
         if (rect.GetHeight() <= 0)
             rect.Max.y = rect.Min.y + 1;
 
-        vector<Node *> nodes;
-        vector<Link *> links;
+        std::vector<Node *> nodes;
+        std::vector<Link *> links;
 
         if (m_SelectLinkMode) {
             Editor->FindLinksInRect(rect, links);
@@ -3835,7 +3835,7 @@ ed::EditorAction::AcceptResult ed::ShortcutAction::Accept(const Control &control
                 m_Context.assign(selection.begin(), selection.end());
 
                 // Expand groups
-                vector<Node *> extra;
+                std::vector<Node *> extra;
                 for (auto object: m_Context) {
                     auto node = object->AsNode();
                     if (IsGroup(node))
@@ -4293,7 +4293,7 @@ ed::DeleteItemsAction::DeleteItemsAction(EditorContext *editor) :
 }
 
 void ed::DeleteItemsAction::DeleteDeadLinks(NodeId nodeId) {
-    vector<ed::Link *> links;
+    std::vector<ed::Link *> links;
     Editor->FindLinksForNode(nodeId, links, true);
     for (auto link: links) {
         link->m_DeleteOnNewFrame = true;

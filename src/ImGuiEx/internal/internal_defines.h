@@ -4,7 +4,10 @@
 
 #pragma once
 
+#include "internal_common.h"
+
 namespace ImGuiEx::api {
+
     struct NodeId;
     struct LinkId;
     struct PinId;
@@ -99,5 +102,9 @@ namespace ImGuiEx::api {
     using ConfigSaveNodeSettings = bool (*)(NodeId nodeId, const char *data, size_t size, SaveReasonFlags reason, void *userPointer);
     using ConfigLoadNodeSettings = size_t (*)(NodeId nodeId, char *data, void *userPointer);
     using ConfigSession = void (*)(void *userPointer);
+
 }
 
+namespace ImGuiEx::api::internal {
+
+}

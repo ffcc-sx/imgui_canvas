@@ -2,14 +2,6 @@
 // Created by sunny on 2022-11-27.
 //
 
-#ifndef IMGUI_CANVAS_OBJECT_STYLE_H
-#define IMGUI_CANVAS_OBJECT_STYLE_H
-
-
-//
-// Created by sunny on 2022-11-27.
-//
-
 #pragma once
 
 #include "internal_defines.h"
@@ -99,5 +91,3 @@ namespace ImGuiEx::api {
 
 }
 
-
-#endif //IMGUI_CANVAS_OBJECT_STYLE_H

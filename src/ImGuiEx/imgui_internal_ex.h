@@ -16,9 +16,9 @@
 # include "imgui_canvas.h"
 # include "crude_json.h"
 
-#include "imgui_api_internal_ex.h"
 #include "internal/internal_api.h"
 #include "internal/object_style.h"
+#include "internal/internal_private.h"
 
 # include <vector>
 # include <string>
@@ -29,16 +29,15 @@ namespace ImGuiEx {
     namespace api {
         namespace internal {
 //------------------------------------------------------------------------------
-            namespace ed = ImGuiEx::api::internal;
+
             namespace json = crude_json;
 //------------------------------------------------------------------------------
-            using std::vector;
-            using std::string;
+
 //------------------------------------------------------------------------------
             void Log(const char *fmt, ...);
 //------------------------------------------------------------------------------
-            inline ImRect ImGui_GetItemRect();
-            inline ImVec2 ImGui_GetMouseClickPos(ImGuiMouseButton buttonIndex);
+            // inline ImRect ImGui_GetItemRect();
+            // inline ImVec2 ImGui_GetMouseClickPos(ImGuiMouseButton buttonIndex);
 
             DECLARE_HAS_MEMBER(HasFringeScale, _FringeScale);
 
@@ -445,8 +444,8 @@ namespace ImGuiEx {
                 bool m_IsDirty;
                 SaveReasonFlags m_DirtyReason;
 
-                vector<NodeSettings> m_Nodes;
-                vector<ObjectId> m_Selection;
+                std::vector<NodeSettings> m_Nodes;
+                std::vector<ObjectId> m_Selection;
                 ImVec2 m_ViewScroll;
                 float m_ViewZoom;
                 ImRect m_VisibleRect;
@@ -624,7 +623,7 @@ namespace ImGuiEx {
                 ImVec2 m_LastStart;
                 ImVec2 m_LastEnd;
                 float m_PathLength;
-                vector<CurvePoint> m_Path;
+                std::vector<CurvePoint> m_Path;
 
                 bool IsLinkValid() const;
 
@@ -670,8 +669,8 @@ namespace ImGuiEx {
             private:
                 FlowAnimation *GetOrCreate(Link *link);
 
-                vector<FlowAnimation *> m_Animations;
-                vector<FlowAnimation *> m_FreePool;
+                std::vector<FlowAnimation *> m_Animations;
+                std::vector<FlowAnimation *> m_FreePool;
             };
 
             struct EditorAction {
@@ -845,7 +844,7 @@ namespace ImGuiEx {
                 ImVec2 m_LastSize;
                 ImVec2 m_MinimumSize;
                 ImVec2 m_LastDragOffset;
-                ed::NodeRegion m_Pivot;
+                ImGuiEx::api::internal::NodeRegion m_Pivot;
                 ImGuiMouseCursor m_Cursor;
             };
 
@@ -853,7 +852,7 @@ namespace ImGuiEx {
                 bool m_IsActive;
                 bool m_Clear;
                 Object *m_DraggedObject;
-                vector<Object *> m_Objects;
+                std::vector<Object *> m_Objects;
 
                 DragAction(EditorContext *editor);
 
@@ -880,8 +879,8 @@ namespace ImGuiEx {
                 bool m_CommitSelection;
                 ImVec2 m_StartPoint;
                 ImVec2 m_EndPoint;
-                vector<Object *> m_CandidateObjects;
-                vector<Object *> m_SelectedObjectsAtStart;
+                std::vector<Object *> m_CandidateObjects;
+                std::vector<Object *> m_SelectedObjectsAtStart;
 
                 Animation m_Animation;
 
@@ -942,7 +941,7 @@ namespace ImGuiEx {
                 bool m_IsActive;
                 bool m_InAction;
                 Action m_CurrentAction;
-                vector<Object *> m_Context;
+                std::vector<Object *> m_Context;
 
                 ShortcutAction(EditorContext *editor);
 
@@ -1107,11 +1106,11 @@ namespace ImGuiEx {
 
                 Object *DropCurrentItem();
 
-                vector<Object *> m_ManuallyDeletedObjects;
+                std::vector<Object *> m_ManuallyDeletedObjects;
 
                 IteratorType m_CurrentItemType;
                 UserAction m_UserAction;
-                vector<Object *> m_CandidateObjects;
+                std::vector<Object *> m_CandidateObjects;
                 int m_CandidateItemIndex;
             };
 
@@ -1219,8 +1218,8 @@ namespace ImGuiEx {
 
                 ImVec4 *GetVarVec4Addr(StyleVar idx);
 
-                vector<ColorModifier> m_ColorStack;
-                vector<VarModifier> m_VarStack;
+                std::vector<ColorModifier> m_ColorStack;
+                std::vector<VarModifier> m_VarStack;
             };
 
             struct Config : ImGuiEx::api::Config {
@@ -1316,7 +1315,7 @@ namespace ImGuiEx {
 
                 bool IsSelected(Object *object);
 
-                const vector<Object *> &GetSelectedObjects();
+                const std::vector<Object *> &GetSelectedObjects();
 
                 bool IsAnyNodeSelected();
 
@@ -1328,10 +1327,10 @@ namespace ImGuiEx {
 
                 Node *FindNodeAt(const ImVec2 &p);
 
-                void FindNodesInRect(const ImRect &r, vector<Node *> &result, bool append = false,
+                void FindNodesInRect(const ImRect &r, std::vector<Node *> &result, bool append = false,
                                      bool includeIntersecting = true);
 
-                void FindLinksInRect(const ImRect &r, vector<Link *> &result, bool append = false);
+                void FindLinksInRect(const ImRect &r, std::vector<Link *> &result, bool append = false);
 
                 bool HasAnyLinks(NodeId nodeId) const;
 
@@ -1341,7 +1340,7 @@ namespace ImGuiEx {
 
                 int BreakLinks(PinId pinId);
 
-                void FindLinksForNode(NodeId nodeId, vector<Link *> &result, bool add = false);
+                void FindLinksForNode(NodeId nodeId, std::vector<Link *> &result, bool add = false);
 
                 bool PinHadAnyLinks(PinId pinId);
 
@@ -1509,19 +1508,17 @@ namespace ImGuiEx {
 
                 Style m_Style;
 
-                vector<ObjectWrapper<Node>> m_Nodes;
-                vector<ObjectWrapper<Pin>> m_Pins;
-                vector<ObjectWrapper<Link>> m_Links;
-
-                vector<Object *> m_SelectedObjects;
-
-                vector<Object *> m_LastSelectedObjects;
+                std::vector<ObjectWrapper<Node>> m_Nodes;
+                std::vector<ObjectWrapper<Pin>> m_Pins;
+                std::vector<ObjectWrapper<Link>> m_Links;
+                std::vector<Object *> m_SelectedObjects;
+                std::vector<Object *> m_LastSelectedObjects;
                 uint64_t m_SelectionId;
 
                 Link *m_LastActiveLink;
 
-                vector<Animation *> m_LiveAnimations;
-                vector<Animation *> m_LastLiveAnimations;
+                std::vector<Animation *> m_LiveAnimations;
+                std::vector<Animation *> m_LastLiveAnimations;
 
                 ImGuiEx::Canvas m_Canvas;
                 bool m_IsCanvasVisible;
@@ -1539,7 +1536,7 @@ namespace ImGuiEx {
                 CreateItemAction m_CreateItemAction;
                 DeleteItemsAction m_DeleteItemsAction;
 
-                vector<AnimationController *> m_AnimationControllers;
+                std::vector<AnimationController *> m_AnimationControllers;
                 FlowAnimationController m_FlowAnimationController;
 
                 NodeId m_HoveredNode;
@@ -1558,31 +1555,6 @@ namespace ImGuiEx {
                 int m_ExternalChannel;
                 ImDrawListSplitter m_Splitter;
             };
-
-        } // namespace Detail
-    } // namespace Editor
-} // namespace ax
-
-
-//------------------------------------------------------------------------------
-
-
-
-//------------------------------------------------------------------------------
-namespace ImGuiEx {
-    namespace api {
-        namespace internal {
-
-            inline ImRect ImGui_GetItemRect() {
-                return ImRect(ImGui::GetItemRectMin(), ImGui::GetItemRectMax());
-            }
-
-            inline ImVec2 ImGui_GetMouseClickPos(ImGuiMouseButton buttonIndex) {
-                if (ImGui::IsMouseDown(buttonIndex))
-                    return ImGui::GetIO().MouseClickedPos[buttonIndex];
-                else
-                    return ImGui::GetMousePos();
-            }
 
         } // namespace Detail
     } // namespace Editor

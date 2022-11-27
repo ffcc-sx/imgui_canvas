@@ -3,7 +3,6 @@
 // TODO: Remove this include.
 #include "internal/internal_common.h"
 #include "internal/internal_api.h"
-#include "imgui_api_internal_ex.h"
 
 //------------------------------------------------------------------------------
 # define IMGUI_NODE_EDITOR_VERSION      "0.9.2"
@@ -12,6 +11,7 @@
 namespace ImGuiEx {
     namespace api {
 
+        struct Style;
         struct EditorContext;
 
         void SetCurrentEditor(EditorContext *ctx);
@@ -244,16 +244,5 @@ namespace ImGuiEx {
         // Fills an array with node id's in order they're drawn; up to 'size` elements are set. Returns actual size of filled id's.
         int GetOrderedNodeIds(NodeId *nodes, int size);
 
-        struct NodeId final : api::SafePointerType<NodeId> {
-            using SafePointerType::SafePointerType;
-        };
-
-        struct LinkId final : api::SafePointerType<LinkId> {
-            using SafePointerType::SafePointerType;
-        };
-
-        struct PinId final : api::SafePointerType<PinId> {
-            using SafePointerType::SafePointerType;
-        };
     } // end namespace Editor
 } // namespace ax
