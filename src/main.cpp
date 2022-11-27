@@ -35,18 +35,19 @@ int main(int, char**) {
 
         ImGuiEx::api::SetCurrentEditor(m_Context);
         ImGuiEx::api::Begin("My Editor", ImVec2(0.0, 0.0f));
+        ImGui::Text("This is a test");
         int uniqueId = 1;
         // Start drawing nodes.
-        ImGuiEx::api::BeginNode(uniqueId++);
-        ImGui::Text("Node A");
-        ImGuiEx::api::BeginPin(uniqueId++, ImGuiEx::api::PinKind::Input);
-        ImGui::Text("-> In");
-        ImGuiEx::api::EndPin();
-        ImGui::SameLine();
-        ImGuiEx::api::BeginPin(uniqueId++, ImGuiEx::api::PinKind::Output);
-        ImGui::Text("Out ->");
-        ImGuiEx::api::EndPin();
-        ImGuiEx::api::EndNode();
+        // ImGuiEx::api::BeginNode(uniqueId++);
+        // ImGui::Text("Node A");
+        // ImGuiEx::api::BeginPin(uniqueId++, ImGuiEx::api::PinKind::Input);
+        // ImGui::Text("-> In");
+        // ImGuiEx::api::EndPin();
+        // ImGui::SameLine();
+        // ImGuiEx::api::BeginPin(uniqueId++, ImGuiEx::api::PinKind::Output);
+        // ImGui::Text("Out ->");
+        // ImGuiEx::api::EndPin();
+        // ImGuiEx::api::EndNode();
         ImGuiEx::api::End();
         ImGuiEx::api::SetCurrentEditor(nullptr);
     };

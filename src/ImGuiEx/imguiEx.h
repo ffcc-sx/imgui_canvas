@@ -1,10 +1,10 @@
 # pragma once
 
-# include <imgui.h>
-# include <cstdint> // std::uintXX_t
-# include <utility> // std::move
 
-#include "internal_common.h"
+
+// TODO: Remove this include.
+#include "internal/internal_common.h"
+#include "internal/internal_api.h"
 #include "imgui_api_internal_ex.h"
 
 //------------------------------------------------------------------------------
@@ -13,72 +13,11 @@
 //------------------------------------------------------------------------------
 namespace ImGuiEx {
     namespace api {
-        struct NodeId;
-        struct LinkId;
-        struct PinId;
 
-        enum class PinKind {
-            Input, Output
-        };
-        enum class FlowDirection {
-            Forward, Backward
-        };
-        enum class CanvasSizeMode {
-            FitVerticalView,        // Previous view will be scaled to fit new view on Y axis
-            FitHorizontalView,      // Previous view will be scaled to fit new view on X axis
-            CenterOnly,             // Previous view will be centered on new view
-        };
 
-        enum class SaveReasonFlags : uint32_t {
-            None = 0x00000000,
-            Navigation = 0x00000001,
-            Position = 0x00000002,
-            Size = 0x00000004,
-            Selection = 0x00000008,
-            AddNode = 0x00000010,
-            RemoveNode = 0x00000020,
-            User = 0x00000040
-        };
-        inline SaveReasonFlags operator|(SaveReasonFlags lhs, SaveReasonFlags rhs) {
-            return static_cast<SaveReasonFlags>(static_cast<uint32_t>(lhs) | static_cast<uint32_t>(rhs));
-        }
-        inline SaveReasonFlags operator&(SaveReasonFlags lhs, SaveReasonFlags rhs) {
-            return static_cast<SaveReasonFlags>(static_cast<uint32_t>(lhs) & static_cast<uint32_t>(rhs));
-        }
 
-        using ConfigSaveSettings = bool (*)(const char *data, size_t size, SaveReasonFlags reason, void *userPointer);
-        using ConfigLoadSettings = size_t (*)(char *data, void *userPointer);
-        using ConfigSaveNodeSettings = bool (*)(NodeId nodeId, const char *data, size_t size, SaveReasonFlags reason,
-                                                void *userPointer);
-        using ConfigLoadNodeSettings = size_t (*)(NodeId nodeId, char *data, void *userPointer);
-        using ConfigSession = void (*)(void *userPointer);
 
-        struct Config {
-            using CanvasSizeModeAlias = ImGuiEx::api::CanvasSizeMode;
 
-            const char *SettingsFile;
-            ConfigSession BeginSaveSession;
-            ConfigSession EndSaveSession;
-            ConfigSaveSettings SaveSettings;
-            ConfigLoadSettings LoadSettings;
-            ConfigSaveNodeSettings SaveNodeSettings;
-            ConfigLoadNodeSettings LoadNodeSettings;
-            void *UserPointer;
-            ImVector<float> CustomZoomLevels;
-            CanvasSizeModeAlias CanvasSizeMode;
-            int DragButtonIndex;        // Mouse button index drag action will react to (0-left, 1-right, 2-middle)
-            int SelectButtonIndex;      // Mouse button index select action will react to (0-left, 1-right, 2-middle)
-            int NavigateButtonIndex;    // Mouse button index navigate action will react to (0-left, 1-right, 2-middle)
-            int ContextMenuButtonIndex; // Mouse button index context menu action will react to (0-left, 1-right, 2-middle)
-
-            Config()
-                    : SettingsFile("NodeEditor.json"), BeginSaveSession(nullptr), EndSaveSession(nullptr),
-                      SaveSettings(nullptr), LoadSettings(nullptr), SaveNodeSettings(nullptr),
-                      LoadNodeSettings(nullptr), UserPointer(nullptr), CustomZoomLevels(),
-                      CanvasSizeMode(CanvasSizeModeAlias::FitVerticalView), DragButtonIndex(0), SelectButtonIndex(0),
-                      NavigateButtonIndex(1), ContextMenuButtonIndex(1) {
-            }
-        };
 
         enum StyleColor {
             StyleColor_Bg,

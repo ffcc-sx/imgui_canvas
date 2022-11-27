@@ -8,16 +8,18 @@
 
 #pragma once
 
-# include <cstdint> // std::uintXX_t
-# include <utility> // std::move
-# include <cstdio> // snprintf
-# include <string>
-# include <fstream>
-# include <climits>
-# include <algorithm>
-# include <sstream>
-# include <streambuf>
-# include <type_traits>
+#include <cstdint>         // using std::uintXX_t
+#include <utility>         // using std::move
+#include <cstdio>          // using snprintf
+#include <string>
+#include <fstream>
+#include <climits>
+#include <algorithm>
+#include <sstream>
+#include <streambuf>
+#include <type_traits>
+
+#include <imgui.h>
 
 //------------------------------------------------------------------------------
 // https://stackoverflow.com/a/36079786

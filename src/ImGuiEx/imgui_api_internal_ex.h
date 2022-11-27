@@ -5,7 +5,7 @@
 #pragma once
 
 
-#include "internal_common.h"
+#include "internal/internal_common.h"
 
 namespace ImGuiEx {
     namespace api {
