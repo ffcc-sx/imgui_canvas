@@ -17,13 +17,6 @@ struct ImLine
 
 
 //------------------------------------------------------------------------------
-inline bool operator==(const ImVec2& lhs, const ImVec2& rhs);
-inline bool operator!=(const ImVec2& lhs, const ImVec2& rhs);
-inline ImVec2 operator*(const float lhs, const ImVec2& rhs);
-inline ImVec2 operator-(const ImVec2& lhs);
-
-
-//------------------------------------------------------------------------------
 inline float  ImLength(float v);
 inline float  ImLength(const ImVec2& v);
 inline float  ImLengthSqr(float v);
@@ -53,24 +46,26 @@ inline V EaseOutQuad(V b, V c, T t)
 
 
 //------------------------------------------------------------------------------
-inline bool operator==(const ImVec2& lhs, const ImVec2& rhs)
-{
+//------------------------------------------------------------------------------
+// inline bool operator==(const ImVec2& lhs, const ImVec2& rhs);
+// inline bool operator!=(const ImVec2& lhs, const ImVec2& rhs);
+// inline ImVec2 operator*(const int lhs, const ImVec2& rhs);
+// inline ImVec2 operator-(const ImVec2& lhs);
+
+inline bool operator==(const ImVec2& lhs, const ImVec2& rhs) {
     return lhs.x == rhs.x && lhs.y == rhs.y;
 }
 
-inline bool operator!=(const ImVec2& lhs, const ImVec2& rhs)
-{
+inline bool operator!=(const ImVec2& lhs, const ImVec2& rhs) {
     return lhs.x != rhs.x || lhs.y != rhs.y;
 }
 
-inline ImVec2 operator*(const float lhs, const ImVec2& rhs)
-{
-    return ImVec2(lhs * rhs.x, lhs * rhs.y);
+inline ImVec2 operator*(const float lhs, const ImVec2& rhs) {
+    return {lhs * rhs.x, lhs * rhs.y};
 }
 
-inline ImVec2 operator-(const ImVec2& lhs)
-{
-    return ImVec2(-lhs.x, -lhs.y);
+inline ImVec2 operator-(const ImVec2& lhs) {
+    return {-lhs.x, -lhs.y};
 }
 
 
