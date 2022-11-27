@@ -20,6 +20,8 @@
 #include <type_traits>
 
 #include <imgui.h>
+# define IMGUI_DEFINE_MATH_OPERATORS
+# include <imgui_internal.h>
 
 //------------------------------------------------------------------------------
 // https://stackoverflow.com/a/36079786

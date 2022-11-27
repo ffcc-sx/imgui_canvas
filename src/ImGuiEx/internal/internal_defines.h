@@ -1,6 +1,10 @@
-//
-// Created by sunny on 2022-11-27.
-//
+/*
+ * Author  : SunXin
+ * Modify  : 2022-11-27
+ * Version : 1.0.0.0
+ * Content :
+ *   1.First initialize.
+ */
 
 #pragma once
 
@@ -107,4 +111,46 @@ namespace ImGuiEx::api {
 
 namespace ImGuiEx::api::internal {
 
+    enum class ObjectType {
+        None,
+        Node,
+        Link,
+        Pin
+    };
+
+    enum class NodeType {
+        Node,
+        Group
+    };
+
+    enum class NodeRegion : uint8_t {
+        None = 0x00,
+        Top = 0x01,
+        Bottom = 0x02,
+        Left = 0x04,
+        Right = 0x08,
+        Center = 0x10,
+        Header = 0x20,
+        TopLeft = Top | Left,
+        TopRight = Top | Right,
+        BottomLeft = Bottom | Left,
+        BottomRight = Bottom | Right,
+    };
+    inline NodeRegion operator|(NodeRegion lhs, NodeRegion rhs) {
+        return static_cast<NodeRegion>(static_cast<uint8_t>(lhs) | static_cast<uint8_t>(rhs));
+    }
+    inline NodeRegion operator&(NodeRegion lhs, NodeRegion rhs) {
+        return static_cast<NodeRegion>(static_cast<uint8_t>(lhs) & static_cast<uint8_t>(rhs));
+    }
+
+    enum class SuspendFlags : uint8_t {
+        None = 0,
+        KeepSplitter = 1
+    };
+    inline SuspendFlags operator|(SuspendFlags lhs, SuspendFlags rhs) {
+        return static_cast<SuspendFlags>(static_cast<uint8_t>(lhs) | static_cast<uint8_t>(rhs));
+    }
+    inline SuspendFlags operator&(SuspendFlags lhs, SuspendFlags rhs) {
+        return static_cast<SuspendFlags>(static_cast<uint8_t>(lhs) & static_cast<uint8_t>(rhs));
+    }
 }

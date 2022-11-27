@@ -1,4 +1,5 @@
-# include "imgui_internal_ex.h"
+# include "internal/internal_private.h"
+#include "internal/internal_api.h"
 # include <algorithm>
 
 static ImGuiEx::api::internal::EditorContext *s_Editor = nullptr;

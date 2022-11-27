@@ -1,6 +1,5 @@
-# include "imgui_internal_ex.h"
+# include "internal/internal_private.h"
 // SX: Import for build.
-#include <imgui_internal.h>
 
 namespace ImGuiEx {
     namespace api {

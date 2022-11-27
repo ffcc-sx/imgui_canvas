@@ -1,3 +1,11 @@
+/*
+ * Author  : SunXin
+ * Modify  : 2022-11-27
+ * Version : 1.0.0.0
+ * Content :
+ *   1.First initialize.
+ */
+
 # pragma once
 
 
@@ -89,9 +97,6 @@ inline ImVec2 ImNormalized(const ImVec2& v)
 {
     return v * ImInvLength(v, 0.0f);
 }
-
-
-
 
 //------------------------------------------------------------------------------
 inline bool ImRect_IsEmpty(const ImRect& rect)
