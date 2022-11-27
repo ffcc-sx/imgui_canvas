@@ -116,11 +116,6 @@ int Application::exec(const std::function<void()> &embed) {
     //ImFont* font = io.Fonts->AddFontFromFileTTF("c:\\Windows\\Fonts\\ArialUni.ttf", 18.0f, NULL, io.Fonts->GetGlyphRangesJapanese());
     //IM_ASSERT(font != NULL);
 
-    // TODO: The ImGuiEx using config to save layout, try make it optional.
-    ImGuiEx::api::Config config;
-    config.SettingsFile = "Simple.json";
-    auto m_Context = ImGuiEx::api::CreateEditor(&config);
-
     // Main loop
     while (!glfwWindowShouldClose(_window)) {
         glfwPollEvents();
@@ -142,7 +137,6 @@ int Application::exec(const std::function<void()> &embed) {
         glfwSwapBuffers(_window);
     }
 
-    ImGuiEx::api::DestroyEditor(m_Context);
 
     //==================== Exit application::exec() loop. ====================//
     ImGui_ImplOpenGL3_Shutdown();

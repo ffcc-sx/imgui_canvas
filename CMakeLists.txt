@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.20.2)
 project(imgui_canvas)
-set(CMAKE_CXX_STANDARD 14)
+set(CMAKE_CXX_STANDARD 17)
 
 # Build 'glfw' module.
 set(GLFW_BUILD_EXAMPLES OFF)
