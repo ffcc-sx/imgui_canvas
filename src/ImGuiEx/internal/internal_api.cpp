@@ -3,3 +3,5 @@
 //
 
 #include "internal_api.h"
+
+#include "object_style.h"

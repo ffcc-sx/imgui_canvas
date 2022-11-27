@@ -17,6 +17,8 @@
 # include "crude_json.h"
 
 #include "imgui_api_internal_ex.h"
+#include "internal/internal_api.h"
+#include "internal/object_style.h"
 
 # include <vector>
 # include <string>

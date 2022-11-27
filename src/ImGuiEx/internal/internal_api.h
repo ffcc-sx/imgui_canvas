@@ -7,8 +7,9 @@
 #include "internal_common.h"
 #include "object_config.h"
 
-namespace ImGuiEx::api {
 
+namespace ImGuiEx::api {
+    struct Style;
 
 }
 
